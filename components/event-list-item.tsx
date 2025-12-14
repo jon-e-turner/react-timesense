@@ -15,9 +15,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 50,
   },
-  tinyLogo: {
-    width: 50,
-    height: 50,
+  eliIcon: {
+    fontSize: 50,
+    paddingEnd: 8,
+  },
+  eliTitle: {
+    flex: 1,
+    fontSize: 24,
+    alignContent: 'center',
   },
 });
 
@@ -28,14 +33,14 @@ export default function EventListItem(props: EventListItemProps) {
       aria-selected={props.isSelected}
       style={styles.eventListItem}
     >
-      <MaterialIcons size={styles.tinyLogo.width} name={props.icon} />
-      <Text style={{ flex: 1 }}>{props.name}</Text>
+      <MaterialIcons style={styles.eliIcon} name={props.icon} />
+      <Text style={styles.eliTitle}>{props.name}</Text>
       <MaterialIcons
         style={{
           visibility: props.isSelected ? 'visible' : 'hidden',
-          margin: 'auto',
+          alignContent: 'flex-end',
+          fontSize: styles.eliIcon.fontSize / 3,
         }}
-        size={styles.tinyLogo.width / 3}
         name="star"
       />
     </View>
