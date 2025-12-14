@@ -26,7 +26,7 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "platforms": ["android", "ios", "web"],
+    "platforms": [/* "android", */ "ios", "web"],
     "githubUrl": "https://github.com/jon-e-turner/react-timesince",
     "plugins": [
       "expo-router",
