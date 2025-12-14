@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EventListItem from './event-list-item';
+import EventDetails from './item-details';
 
 const loadData = (): TimeSinceEvent[] => {
   return [
@@ -66,6 +67,7 @@ const loadData = (): TimeSinceEvent[] => {
 export default function EventsList() {
   const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleListItemPress = (id: string) => {
     setSelected(id);
@@ -83,9 +85,27 @@ export default function EventsList() {
     setEvents([...events, newEvent]);
   };
 
+  const handleModalClose = (event?: TimeSinceEvent) => {
+    if (event) {
+      // update the record
+    }
+
+    setIsModalVisible(false);
+  };
+
+  const handleListItemLongPress = (id: string) => {
+    setSelected(id);
+    setIsModalVisible(true);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <EventDetails
+          event={events.find((evt) => evt.id === selected)}
+          isVisible={isModalVisible}
+          onClose={handleModalClose}
+        />
         <FlatList
           data={events}
           renderItem={({ item }) => {
@@ -94,6 +114,9 @@ export default function EventsList() {
                 key={item.id}
                 onPress={() => {
                   handleListItemPress(item.id);
+                }}
+                onLongPress={() => {
+                  handleListItemLongPress(item.id);
                 }}
                 style={({ pressed }) => [
                   {
