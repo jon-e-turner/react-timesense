@@ -1,0 +1,25 @@
+export type IconSets = 'MaterialIcons';
+
+export type TimeSinceEventGlyph =
+  | 'bookmark'
+  | 'bookmark-outline'
+  | 'chat-bubble'
+  | 'chat-bubble-outline'
+  | 'error'
+  | 'error-outline'
+  | 'favorite'
+  | 'favorite-outline'
+  | 'label-important'
+  | 'label-important-outline'
+  | 'label'
+  | 'label-outline'
+  | 'lightbulb'
+  | 'lightbulb-outline'
+  | 'mail'
+  | 'mail-outline'
+  | 'people'
+  | 'people-outline'
+  | 'person'
+  | 'person-outline'
+  | 'work'
+  | 'work-outline';

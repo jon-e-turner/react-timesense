@@ -1,5 +1,6 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
 import type { TimeSinceEvent } from '@/types/time-since-event';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -8,62 +9,55 @@ import EventListItem from './event-list-item';
 const loadData = (): TimeSinceEvent[] => {
   return [
     {
+      createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'first',
       name: 'first event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
-      icon: 'alarm',
+      createdOn: new Date('2025-12-10T00:00:00Z'),
+      icon: 'chat-bubble-outline',
       id: 'second',
       name: 'second event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
-      icon: 'airplane-outline',
+      createdOn: new Date('2025-12-10T00:00:00Z'),
+      icon: 'work-outline',
       id: 'third',
       name: 'third event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
+      createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'fourth',
       name: 'fourth event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
+      createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'fifth',
       name: 'fifth event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
-      icon: 'book-outline',
+      createdOn: new Date('2025-12-10T00:00:00Z'),
+      icon: 'lightbulb-outline',
       id: 'sixth',
       name: 'sixth event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
+      createdOn: new Date('2025-12-10T00:00:00Z'),
+      icon: 'favorite',
       id: 'seventh',
       name: 'seventh event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
     {
+      createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'eighth',
       name: 'eighth event',
-      lastTriggered: undefined,
-      triggerCount: 0,
       triggerHistory: [],
     },
   ];
@@ -71,10 +65,22 @@ const loadData = (): TimeSinceEvent[] => {
 
 export default function EventsList() {
   const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
-  const [selected, setSelected] = useState<string>(events[0]?.id);
+  const [selected, setSelected] = useState<string>('');
 
-  const handlePress = (id: string) => {
+  const handleListItemPress = (id: string) => {
     setSelected(id);
+  };
+
+  const handleAddItemPress = () => {
+    const newEvent = {
+      createdOn: new Date(),
+      icon: 'lightbulb-outline',
+      id: 'new', // This needs to be an idempotent function.
+      name: 'new event',
+      triggerHistory: [],
+    } as TimeSinceEvent;
+
+    setEvents([...events, newEvent]);
   };
 
   return (
@@ -87,7 +93,7 @@ export default function EventsList() {
               <Pressable
                 key={item.id}
                 onPress={() => {
-                  handlePress(item.id);
+                  handleListItemPress(item.id);
                 }}
                 style={({ pressed }) => [
                   {
@@ -99,7 +105,7 @@ export default function EventsList() {
                 ]}
               >
                 <EventListItem
-                  icon={item.icon ?? 'alarm-outline'}
+                  icon={item.icon ?? 'bookmark-outline'}
                   id={item.id}
                   name={item.name}
                   isSelected={item.id === selected}
@@ -108,6 +114,13 @@ export default function EventsList() {
             );
           }}
         />
+        <Pressable onPress={() => handleAddItemPress()}>
+          <MaterialIcons
+            size={65}
+            name="add-circle-outline"
+            style={[{ marginStart: 'auto' }]}
+          />
+        </Pressable>
       </SafeAreaView>
     </SafeAreaProvider>
   );
