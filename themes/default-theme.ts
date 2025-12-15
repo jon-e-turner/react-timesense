@@ -6,6 +6,12 @@ export const defaultTheme = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#004a77',
   },
+  button: {
+    margin: 'auto',
+    fontSize: 20,
+    textDecorationLine: 'underline',
+    color: '#fff',
+  },
   text: {
     fontSize: 16,
   },
