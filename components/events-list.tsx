@@ -69,10 +69,6 @@ export default function EventsList() {
   const [selected, setSelected] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const handleListItemPress = (id: string) => {
-    setSelected(id);
-  };
-
   const handleAddItemPress = () => {
     const newEvent = {
       createdOn: new Date(),
@@ -87,14 +83,13 @@ export default function EventsList() {
 
   const handleModalClose = (event?: TimeSinceEvent) => {
     if (event) {
-      // update the record
+      // CRUD: update the record
     }
 
     setIsModalVisible(false);
   };
 
   const handleListItemLongPress = (id: string) => {
-    setSelected(id);
     setIsModalVisible(true);
   };
 
@@ -112,8 +107,8 @@ export default function EventsList() {
             return (
               <Pressable
                 key={item.id}
-                onPress={() => {
-                  handleListItemPress(item.id);
+                onPressOut={() => {
+                  setSelected(item.id);
                 }}
                 onLongPress={() => {
                   handleListItemLongPress(item.id);
