@@ -10,7 +10,7 @@ export const defaultTheme = StyleSheet.create({
     margin: 'auto',
     fontSize: 20,
     textDecorationLine: 'underline',
-    color: '#fff',
+    color: '#f0f0f0',
   },
   text: {
     fontSize: 16,
