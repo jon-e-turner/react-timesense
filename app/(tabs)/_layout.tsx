@@ -1,4 +1,3 @@
-import { defaultTheme } from '@/themes/default-theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
@@ -8,12 +7,12 @@ export default function TabsLayout() {
       screenOptions={{
         tabBarActiveTintColor: '#ffd33d',
         headerStyle: {
-          backgroundColor: defaultTheme.container.backgroundColor,
+          backgroundColor: '#25292e',
         },
         headerShadowVisible: false,
         headerTintColor: '#f0f0f0',
         tabBarStyle: {
-          backgroundColor: defaultTheme.container.backgroundColor,
+          backgroundColor: '#25292e',
         },
       }}
     >

@@ -1,22 +1,79 @@
 import { defaultTheme } from '@/themes/default-theme';
+import { MaterialIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function AboutScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+    <View style={styles.aboutScreen}>
+      <View style={styles.headerRow}>
+        <MaterialIcons name="bookmark" style={styles.appIcon} />
+        <Text style={styles.appTitle}>TimeSense</Text>
+      </View>
+      <View style={styles.hr} />
+      <View style={styles.infoSection}>
+        <Text style={styles.infoText}>
+          This is an MIT-licensed trainer project by Jon E. Turner that I hope
+          other neuro-spicy folks also find useful.
+        </Text>
+        <Text style={styles.infoText}>
+          My goal was to create a combination reminder and timer app that I
+          would actually use. The name is a play on how ADHD robs you of your
+          time sense and how the app tracks the time since an event occurred.
+        </Text>
+      </View>
+      <View style={styles.footerRow}>
+        <Link href="https://github.com/jon-e-turner/react-timesence">
+          <MaterialCommunityIcons name="github" style={styles.linkIcon} />
+        </Link>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  aboutScreen: {
     backgroundColor: defaultTheme.container.backgroundColor,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
   },
-  text: {
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
+    paddingBottom: 8,
+  },
+  infoSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    margin: '12%',
+  },
+  appIcon: {
+    fontSize: 80,
+    color: '#25292e',
+  },
+  appTitle: {
+    fontSize: 70,
     color: '#f0f0f0',
+  },
+  linkIcon: {
+    fontSize: 80,
+    color: '#ffd33d',
+  },
+  infoText: {
+    fontSize: 20,
+    color: '#f0f0f0',
+    paddingBottom: 8,
+  },
+  hr: {
+    borderBottomColor: '#25292e',
+    borderBottomWidth: 8,
+    marginStart: '7.5%', // Should always be half of 100 - width
+    width: '85%',
   },
 });
