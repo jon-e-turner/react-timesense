@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EventListItem from './event-list-item';
-import EventDetails from './item-details';
+import EventDetails from './event-details';
 
 const loadData = (): TimeSinceEvent[] => {
   return [
