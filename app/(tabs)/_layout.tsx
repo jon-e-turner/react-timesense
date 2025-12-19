@@ -9,7 +9,7 @@ export default function TabsLayout() {
         headerStyle: {
           backgroundColor: '#25292e',
         },
-        headerShadowVisible: false,
+        headerShadowVisible: true,
         headerTintColor: '#f0f0f0',
         tabBarStyle: {
           backgroundColor: '#25292e',
@@ -19,7 +19,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Events',
+          title: 'TimeSense',
           tabBarIcon: ({ color, focused }) => (
             <MaterialIcons
               name={focused ? 'star' : 'star-outline'}

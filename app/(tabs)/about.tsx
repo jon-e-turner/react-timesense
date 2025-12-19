@@ -14,13 +14,22 @@ export default function AboutScreen() {
       <View style={styles.hr} />
       <View style={styles.infoSection}>
         <Text style={styles.infoText}>
-          This is an MIT-licensed trainer project by Jon E. Turner that I hope
-          other neuro-spicy folks also find useful.
+          This is a trainer project by Jon E. Turner that I hope other
+          neuro-spicy folks also find useful. I am slowly building a more
+          comprehensive app that will include TimeSense as a component, but this
+          app will always be open source and MIT-licensed.
         </Text>
         <Text style={styles.infoText}>
           My goal was to create a combination reminder and timer app that I
-          would actually use. The name is a play on how ADHD robs you of your
-          time sense and how the app tracks the time since an event occurred.
+          would actually use. The name is a play on how ADHD robs you of
+          your&nbsp;
+          <Link
+            style={styles.link}
+            href="https://health.clevelandclinic.org/time-blindness"
+          >
+            sense of time
+          </Link>{' '}
+          and the app tracks the time since an event occurred.
         </Text>
       </View>
       <View style={styles.footerRow}>
@@ -61,6 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 70,
     color: '#f0f0f0',
   },
+  link: {
+    color: '#ffd33d',
+  },
   linkIcon: {
     fontSize: 80,
     color: '#ffd33d',
@@ -69,6 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#f0f0f0',
     paddingBottom: 8,
+    textAlign: 'justify',
   },
   hr: {
     borderBottomColor: '#25292e',

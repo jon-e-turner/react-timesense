@@ -5,12 +5,7 @@ export const defaultTheme = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#004a77',
-  },
-  button: {
-    margin: 'auto',
-    fontSize: 20,
-    textDecorationLine: 'underline',
-    color: '#f0f0f0',
+    padding: 4,
   },
   text: {
     fontSize: 16,
@@ -18,12 +13,11 @@ export const defaultTheme = StyleSheet.create({
   wrapperCustom: {
     borderRadius: 8,
     padding: 6,
+    margin: 4,
   },
   logBox: {
     padding: 20,
     margin: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#f0f0f0',
-    backgroundColor: '#0072ba', //'#f9f9f9',
+    backgroundColor: '#0072ba',
   },
 });
