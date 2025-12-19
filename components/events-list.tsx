@@ -1,10 +1,11 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
 import type { TimeSinceEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
-import { FlatList, Pressable } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { FlatList, Modal, Pressable, type ModalProps } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import EventDetails from './event-details';
+import EventDetails, { type EventDetailsProps } from './event-details';
 import EventListItem from './event-list-item';
 
 const loadData = (): TimeSinceEvent[] => {
@@ -64,7 +65,27 @@ const loadData = (): TimeSinceEvent[] => {
   ];
 };
 
+const EventDetailsModal = React.forwardRef(function eventDetailsModal(
+  props: EventDetailsProps & ModalProps,
+  ref: React.Ref<Modal>
+) {
+  // some additional logic
+  return (
+    <Modal
+      animationType="fade"
+      ref={ref}
+      visible={props.isVisible}
+      transparent={true}
+    >
+      <EventDetails {...props} />
+    </Modal>
+  );
+});
+
+const AnimatedModal = Animated.createAnimatedComponent(EventDetailsModal);
+
 export default function EventsList() {
+  const ref = useRef<Modal | null>(null);
   const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -96,7 +117,9 @@ export default function EventsList() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <EventDetails
+        <AnimatedModal
+          ref={ref}
+          style={{ justifyContent: 'center' }}
           event={events.find((evt) => evt.id === selected)}
           isVisible={isModalVisible}
           onClose={handleModalClose}
