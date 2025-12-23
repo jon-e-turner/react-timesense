@@ -1,11 +1,11 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
 import type { TimeSinceEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
-import { FlatList, Modal, Pressable, type ModalProps } from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, { Activity, useState } from 'react';
+import { FlatList, Modal, Pressable } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import EventDetails, { type EventDetailsProps } from './event-details';
+import EventDetails from './event-details';
 import EventListItem from './event-list-item';
 
 const loadData = (): TimeSinceEvent[] => {
@@ -65,27 +65,8 @@ const loadData = (): TimeSinceEvent[] => {
   ];
 };
 
-const EventDetailsModal = React.forwardRef(function eventDetailsModal(
-  props: EventDetailsProps & ModalProps,
-  ref: React.Ref<Modal>
-) {
-  // some additional logic
-  return (
-    <Modal
-      animationType="fade"
-      ref={ref}
-      visible={props.isVisible}
-      transparent={true}
-    >
-      <EventDetails {...props} />
-    </Modal>
-  );
-});
-
-const AnimatedModal = Animated.createAnimatedComponent(EventDetailsModal);
-
 export default function EventsList() {
-  const ref = useRef<Modal | null>(null);
+  const startingCenter = useSharedValue<number>(0);
   const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -111,19 +92,25 @@ export default function EventsList() {
   };
 
   const handleListItemLongPress = (id: string) => {
+    startingCenter.value = 100;
     setIsModalVisible(true);
   };
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <AnimatedModal
-          ref={ref}
-          style={{ justifyContent: 'center' }}
-          event={events.find((evt) => evt.id === selected)}
-          isVisible={isModalVisible}
-          onClose={handleModalClose}
-        />
+        <Activity mode={isModalVisible ? 'visible' : 'hidden'}>
+          <Modal
+            visible={isModalVisible}
+            transparent={true}
+            onRequestClose={() => handleModalClose()}
+          >
+            <EventDetails
+              handleModalClose={handleModalClose}
+              timeSinceEvent={events.find((evt) => evt.id === selected)}
+            />
+          </Modal>
+        </Activity>
         <FlatList
           data={events}
           renderItem={({ item }) => {
@@ -155,6 +142,15 @@ export default function EventsList() {
             );
           }}
         />
+        {isModalVisible ? (
+          <Pressable onPress={() => handleModalClose()}>
+            <MaterialIcons
+              size={65}
+              style={{ marginStart: 'auto' }}
+              name="close-fullscreen"
+            />
+          </Pressable>
+        ) : null}
         <Pressable onPress={() => handleAddItemPress()}>
           <MaterialIcons
             size={65}

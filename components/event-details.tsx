@@ -4,23 +4,21 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export type EventDetailsProps = {
-  event?: TimeSinceEvent;
-  isVisible: boolean;
-  onClose: (event?: TimeSinceEvent) => void;
+  timeSinceEvent?: TimeSinceEvent;
+  handleModalClose: (timeSinceEvent?: TimeSinceEvent) => void;
 };
 
 export default function EventDetails({
-  event,
-  isVisible,
-  onClose,
+  timeSinceEvent,
+  handleModalClose,
 }: EventDetailsProps) {
   const [isDirty, setIsDirty] = useState(false);
 
-  const handleModalClose = (ignoreChanges: boolean = false) => {
+  const handleDetailClose = (ignoreChanges: boolean = false) => {
     if (isDirty && !ignoreChanges) {
-      onClose(event);
+      handleModalClose(timeSinceEvent);
     } else {
-      onClose();
+      handleModalClose();
     }
 
     setIsDirty(false);
@@ -35,15 +33,18 @@ export default function EventDetails({
       <View style={styles.headerRow}>
         <MaterialIcons
           size={styles.titleText.fontSize}
-          name={event?.icon ?? 'bookmark'}
+          name={timeSinceEvent?.icon ?? 'bookmark'}
         />
         <Text
           style={styles.titleText}
           onLongPress={() => handleEventNameEdit()}
         >
-          {event?.name}
+          {timeSinceEvent?.name}
         </Text>
-        <Pressable style={styles.doneButton} onPress={() => handleModalClose()}>
+        <Pressable
+          style={styles.doneButton}
+          onPress={() => handleDetailClose()}
+        >
           <MaterialIcons
             color={styles.doneButton.color}
             size={styles.titleText.fontSize * 0.85}
@@ -52,7 +53,7 @@ export default function EventDetails({
         </Pressable>
         <Pressable
           style={styles.closeButton}
-          onPress={() => handleModalClose(true)}
+          onPress={() => handleDetailClose(true)}
         >
           <MaterialIcons
             color={styles.closeButton.color}

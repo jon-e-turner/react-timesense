@@ -1,18 +1,19 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { defaultTheme as styles } from '@/themes/default-theme';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#ffd33d',
+        tabBarActiveTintColor: styles.tabBar.color,
         headerStyle: {
-          backgroundColor: '#25292e',
+          backgroundColor: styles.tabBarHeader.backgroundColor,
         },
         headerShadowVisible: true,
-        headerTintColor: '#f0f0f0',
+        headerTintColor: styles.tabBarHeader.color,
         tabBarStyle: {
-          backgroundColor: '#25292e',
+          backgroundColor: styles.tabBar.backgroundColor,
         },
       }}
     >
@@ -23,6 +24,19 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <MaterialIcons
               name={focused ? 'star' : 'star-outline'}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="animations"
+        options={{
+          title: 'Animations',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons
+              name={focused ? 'animation-play' : 'animation-play-outline'}
               color={color}
               size={24}
             />

@@ -20,4 +20,12 @@ export const defaultTheme = StyleSheet.create({
     margin: 10,
     backgroundColor: '#0072ba',
   },
+  tabBar: {
+    color: '#ffd33d',
+    backgroundColor: '#25292e',
+  },
+  tabBarHeader: {
+    color: '#f0f0f0',
+    backgroundColor: '#25292e',
+  },
 });

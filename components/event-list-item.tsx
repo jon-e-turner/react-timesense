@@ -30,7 +30,7 @@ export default function EventListItem(props: EventListItemProps) {
   return (
     <View
       id={props.id}
-      aria-selected={props.isSelected}
+      //aria-selected={props.isSelected}
       style={styles.eventListItem}
     >
       <MaterialIcons style={styles.eliIcon} name={props.icon} />
