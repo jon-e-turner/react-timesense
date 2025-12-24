@@ -1,11 +1,9 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
 import { TimeSenseEvent, type ITimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
-import { FlatList, Modal, Pressable, type ModalProps } from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, { useState } from 'react';
+import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import EventDetails, { type EventDetailsProps } from './event-details';
 import EventListItem from './event-list-item';
 
 const loadData = (): ITimeSenseEvent[] => {
@@ -65,30 +63,10 @@ const loadData = (): ITimeSenseEvent[] => {
   ];
 };
 
-const EventDetailsModal = React.forwardRef(function eventDetailsModal(
-  props: EventDetailsProps & ModalProps,
-  ref: React.Ref<Modal>
-) {
-  // some additional logic
-  return (
-    <Modal
-      animationType="fade"
-      ref={ref}
-      visible={props.isVisible}
-      transparent={true}
-    >
-      <EventDetails {...props} />
-    </Modal>
-  );
-});
-
-const AnimatedModal = Animated.createAnimatedComponent(EventDetailsModal);
-
 export default function EventsList() {
-  const ref = useRef<Modal | null>(null);
   const [events, setEvents] = useState<ITimeSenseEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [detailsExpanded, setDetailsExpanded] = useState<string[]>([]);
 
   const handleAddItemPress = () => {
     const newEvent = {
@@ -102,28 +80,18 @@ export default function EventsList() {
     setEvents([...events, newEvent]);
   };
 
-  const handleModalClose = (event?: ITimeSenseEvent) => {
-    if (event) {
-      // CRUD: update the record
-    }
-
-    setIsModalVisible(false);
-  };
-
   const handleListItemLongPress = (id: string) => {
-    setIsModalVisible(true);
+    // setIsModalVisible(true);
+    if (detailsExpanded.includes(id)) {
+      setDetailsExpanded(detailsExpanded.filter((d) => d !== id));
+    } else {
+      setDetailsExpanded([...detailsExpanded, id]);
+    }
   };
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <AnimatedModal
-          ref={ref}
-          style={{ justifyContent: 'center' }}
-          event={events.find((evt) => evt.id === selected)}
-          isVisible={isModalVisible}
-          onClose={handleModalClose}
-        />
         <FlatList
           data={events}
           renderItem={({ item }) => {
@@ -148,7 +116,7 @@ export default function EventsList() {
                 <EventListItem
                   timeSenseEvent={item}
                   isSelected={item.id === selected}
-                  showDetails={false}
+                  showDetails={detailsExpanded.includes(item.id)}
                 />
               </Pressable>
             );

@@ -1,3 +1,4 @@
+import { defaultTheme } from '@/themes/default-theme';
 import type { ITimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
@@ -9,6 +10,7 @@ type EventListItemProps = {
 };
 
 const styles = StyleSheet.create({
+  ...defaultTheme,
   eventListItem: {
     flex: 1,
     flexDirection: 'row',
@@ -24,8 +26,11 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   eliDetails: {
+    minHeight: 50,
     backgroundColor: '#0c2645',
     fontSize: 20,
+  },
+  eliDetailText: {
     color: '#f0f0f0',
   },
 });
@@ -49,14 +54,17 @@ export default function EventListItem({
           name="star"
         />
       </View>
-      <View
-        style={{
-          ...styles.eliDetails,
-          visibility: showDetails ? 'visible' : 'hidden',
-        }}
-      >
-        <Text></Text>
-      </View>
+      {showDetails ? (
+        <View
+          style={{
+            ...styles.wrapperCustom,
+            ...styles.eliDetails,
+            visibility: showDetails ? 'visible' : 'hidden',
+          }}
+        >
+          <Text style={styles.eliDetailText}>Lorum ipsum dolos et.</Text>
+        </View>
+      ) : null}
     </View>
   );
 }
