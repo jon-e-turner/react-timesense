@@ -1,12 +1,11 @@
-import type { TimeSinceEventGlyph } from '@/types/icons';
+import type { ITimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
 type EventListItemProps = {
-  icon?: TimeSinceEventGlyph;
-  id: string;
+  timeSenseEvent: ITimeSenseEvent;
   isSelected: boolean;
-  name: string;
+  showDetails: boolean;
 };
 
 const styles = StyleSheet.create({
@@ -24,25 +23,40 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignContent: 'center',
   },
+  eliDetails: {
+    backgroundColor: '#0c2645',
+    fontSize: 20,
+    color: '#f0f0f0',
+  },
 });
 
-export default function EventListItem(props: EventListItemProps) {
+export default function EventListItem({
+  timeSenseEvent,
+  isSelected,
+  showDetails,
+}: EventListItemProps) {
   return (
-    <View
-      id={props.id}
-      aria-selected={props.isSelected}
-      style={styles.eventListItem}
-    >
-      <MaterialIcons style={styles.eliIcon} name={props.icon} />
-      <Text style={styles.eliTitle}>{props.name}</Text>
-      <MaterialIcons
+    <View id={timeSenseEvent.id} style={{ flexDirection: 'column' }}>
+      <View aria-selected={isSelected} style={styles.eventListItem}>
+        <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
+        <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
+        <MaterialIcons
+          style={{
+            visibility: isSelected ? 'visible' : 'hidden',
+            alignContent: 'flex-end',
+            fontSize: styles.eliIcon.fontSize / 3,
+          }}
+          name="star"
+        />
+      </View>
+      <View
         style={{
-          visibility: props.isSelected ? 'visible' : 'hidden',
-          alignContent: 'flex-end',
-          fontSize: styles.eliIcon.fontSize / 3,
+          ...styles.eliDetails,
+          visibility: showDetails ? 'visible' : 'hidden',
         }}
-        name="star"
-      />
+      >
+        <Text></Text>
+      </View>
     </View>
   );
 }

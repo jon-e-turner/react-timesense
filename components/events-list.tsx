@@ -1,5 +1,5 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
-import type { TimeSinceEvent } from '@/types/time-since-event';
+import { TimeSenseEvent, type ITimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { FlatList, Modal, Pressable, type ModalProps } from 'react-native';
@@ -8,60 +8,60 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EventDetails, { type EventDetailsProps } from './event-details';
 import EventListItem from './event-list-item';
 
-const loadData = (): TimeSinceEvent[] => {
+const loadData = (): ITimeSenseEvent[] => {
   return [
-    {
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'first',
       name: 'first event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       icon: 'chat-bubble-outline',
       id: 'second',
       name: 'second event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       icon: 'work-outline',
       id: 'third',
       name: 'third event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'fourth',
       name: 'fourth event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'fifth',
       name: 'fifth event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       icon: 'lightbulb-outline',
       id: 'sixth',
       name: 'sixth event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       icon: 'favorite',
       id: 'seventh',
       name: 'seventh event',
       triggerHistory: [],
-    },
-    {
+    }),
+    new TimeSenseEvent({
       createdOn: new Date('2025-12-10T00:00:00Z'),
       id: 'eighth',
       name: 'eighth event',
       triggerHistory: [],
-    },
+    }),
   ];
 };
 
@@ -86,7 +86,7 @@ const AnimatedModal = Animated.createAnimatedComponent(EventDetailsModal);
 
 export default function EventsList() {
   const ref = useRef<Modal | null>(null);
-  const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
+  const [events, setEvents] = useState<ITimeSenseEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -97,12 +97,12 @@ export default function EventsList() {
       id: 'new', // This needs to be an idempotent function.
       name: 'new event',
       triggerHistory: [],
-    } as TimeSinceEvent;
+    } as ITimeSenseEvent;
 
     setEvents([...events, newEvent]);
   };
 
-  const handleModalClose = (event?: TimeSinceEvent) => {
+  const handleModalClose = (event?: ITimeSenseEvent) => {
     if (event) {
       // CRUD: update the record
     }
@@ -146,10 +146,9 @@ export default function EventsList() {
                 ]}
               >
                 <EventListItem
-                  icon={item.icon ?? 'bookmark-outline'}
-                  id={item.id}
-                  name={item.name}
+                  timeSenseEvent={item}
                   isSelected={item.id === selected}
+                  showDetails={false}
                 />
               </Pressable>
             );
