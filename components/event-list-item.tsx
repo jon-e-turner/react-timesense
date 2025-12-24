@@ -3,20 +3,20 @@ import type { ITimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
-type EventListItemProps = {
+type TsEventListItemProps = {
   timeSenseEvent: ITimeSenseEvent;
   isSelected: boolean;
   showDetails: boolean;
 };
 
-export default function EventListItem({
+export default function TsEventListItem({
   timeSenseEvent,
   isSelected,
   showDetails,
-}: EventListItemProps) {
+}: TsEventListItemProps) {
   return (
     <View id={timeSenseEvent.id} style={{ flexDirection: 'column' }}>
-      <View aria-selected={isSelected} style={styles.eventListItem}>
+      <View aria-selected={isSelected} style={styles.tsEventListItem}>
         <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
         <MaterialIcons
@@ -45,7 +45,7 @@ export default function EventListItem({
 
 const styles = StyleSheet.create({
   ...defaultTheme,
-  eventListItem: {
+  tsEventListItem: {
     flex: 1,
     flexDirection: 'row',
     fontSize: 50,

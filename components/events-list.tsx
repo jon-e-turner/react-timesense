@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import EventListItem from './event-list-item';
+import TsEventListItem from './event-list-item';
 
 const loadData = (): ITimeSenseEvent[] => {
   return [
@@ -63,13 +63,13 @@ const loadData = (): ITimeSenseEvent[] => {
   ];
 };
 
-export default function EventsList() {
-  const [events, setEvents] = useState<ITimeSenseEvent[]>(loadData);
+export default function TsEventsList() {
+  const [tsEvents, setTsEvents] = useState<ITimeSenseEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
   const [detailsExpanded, setDetailsExpanded] = useState<string[]>([]);
 
   const handleAddItemPress = () => {
-    const newEvent = {
+    const newTsEvent = {
       createdOn: new Date(),
       icon: 'lightbulb-outline',
       id: 'new', // This needs to be an idempotent function.
@@ -77,11 +77,10 @@ export default function EventsList() {
       triggerHistory: [],
     } as ITimeSenseEvent;
 
-    setEvents([...events, newEvent]);
+    setTsEvents([...tsEvents, newTsEvent]);
   };
 
   const handleListItemLongPress = (id: string) => {
-    // setIsModalVisible(true);
     if (detailsExpanded.includes(id)) {
       setDetailsExpanded(detailsExpanded.filter((d) => d !== id));
     } else {
@@ -93,7 +92,7 @@ export default function EventsList() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={events}
+          data={tsEvents}
           renderItem={({ item }) => {
             return (
               <Pressable
@@ -113,7 +112,7 @@ export default function EventsList() {
                   styles.wrapperCustom,
                 ]}
               >
-                <EventListItem
+                <TsEventListItem
                   timeSenseEvent={item}
                   isSelected={item.id === selected}
                   showDetails={detailsExpanded.includes(item.id)}
