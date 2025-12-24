@@ -9,32 +9,6 @@ type EventListItemProps = {
   showDetails: boolean;
 };
 
-const styles = StyleSheet.create({
-  ...defaultTheme,
-  eventListItem: {
-    flex: 1,
-    flexDirection: 'row',
-    fontSize: 50,
-  },
-  eliIcon: {
-    fontSize: 50,
-    paddingEnd: 8,
-  },
-  eliTitle: {
-    flex: 1,
-    fontSize: 24,
-    alignContent: 'center',
-  },
-  eliDetails: {
-    minHeight: 50,
-    backgroundColor: '#0c2645',
-    fontSize: 20,
-  },
-  eliDetailText: {
-    color: '#f0f0f0',
-  },
-});
-
 export default function EventListItem({
   timeSenseEvent,
   isSelected,
@@ -68,3 +42,29 @@ export default function EventListItem({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  ...defaultTheme,
+  eventListItem: {
+    flex: 1,
+    flexDirection: 'row',
+    fontSize: 50,
+  },
+  eliIcon: {
+    fontSize: 50,
+    paddingEnd: 8,
+  },
+  eliTitle: {
+    flex: 3,
+    fontSize: 24,
+    alignContent: 'center',
+  },
+  eliDetails: {
+    minHeight: 50,
+    backgroundColor: '#0c2645',
+    fontSize: 20,
+  },
+  eliDetailText: {
+    color: '#f0f0f0',
+  },
+});
