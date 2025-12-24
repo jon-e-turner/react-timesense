@@ -1,64 +1,68 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
-import { TimeSenseEvent, type ITimeSenseEvent } from '@/types/time-since-event';
+import { TimeSenseEvent, type ITimeSenseEvent } from '@/types/time-sense-event';
+import { UTCDate } from '@date-fns/utc';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import TsEventListItem from './event-list-item';
+import TsEventListItem from './tsevent-list-item';
 
 const loadData = (): ITimeSenseEvent[] => {
   return [
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       id: 'first',
       name: 'first event',
       triggerHistory: [],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       icon: 'chat-bubble-outline',
       id: 'second',
       name: 'second event',
       triggerHistory: [],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       icon: 'work-outline',
       id: 'third',
       name: 'third event',
       triggerHistory: [],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       id: 'fourth',
       name: 'fourth event',
       triggerHistory: [],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       id: 'fifth',
       name: 'fifth event',
       triggerHistory: [],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       icon: 'lightbulb-outline',
       id: 'sixth',
       name: 'sixth event',
-      triggerHistory: [],
+      triggerHistory: [new UTCDate('2025-11-06T00:35:00Z')],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       icon: 'favorite',
       id: 'seventh',
       name: 'seventh event',
-      triggerHistory: [],
+      triggerHistory: [new UTCDate('1997-11-06T00:35:00Z')],
     }),
     new TimeSenseEvent({
-      createdOn: new Date('2025-12-10T00:00:00Z'),
+      createdOn: new UTCDate('2025-12-10T00:00:00Z'),
       id: 'eighth',
       name: 'eighth event',
-      triggerHistory: [],
+      triggerHistory: [
+        new UTCDate('2025-12-23T00:30:00Z'),
+        new UTCDate('2023-05-23T02:30:00Z'),
+      ],
     }),
   ];
 };
@@ -70,7 +74,7 @@ export default function TsEventsList() {
 
   const handleAddItemPress = () => {
     const newTsEvent = {
-      createdOn: new Date(),
+      createdOn: new UTCDate(),
       icon: 'lightbulb-outline',
       id: 'new', // This needs to be an idempotent function.
       name: 'new event',

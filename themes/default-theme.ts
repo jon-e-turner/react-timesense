@@ -12,7 +12,7 @@ export const defaultTheme = StyleSheet.create({
   },
   wrapperCustom: {
     borderRadius: 8,
-    padding: 6,
+    padding: 4,
     margin: 4,
   },
   logBox: {

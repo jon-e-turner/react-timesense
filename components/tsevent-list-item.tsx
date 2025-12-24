@@ -1,7 +1,9 @@
 import { defaultTheme } from '@/themes/default-theme';
-import type { ITimeSenseEvent } from '@/types/time-since-event';
+import type { ITimeSenseEvent } from '@/types/time-sense-event';
+import { UTCDate } from '@date-fns/utc';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
+import TimeSinceDisplay from './time-since-display';
 
 type TsEventListItemProps = {
   timeSenseEvent: ITimeSenseEvent;
@@ -19,14 +21,13 @@ export default function TsEventListItem({
       <View aria-selected={isSelected} style={styles.tsEventListItem}>
         <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
-        <MaterialIcons
-          style={{
-            visibility: isSelected ? 'visible' : 'hidden',
-            alignContent: 'flex-end',
-            fontSize: styles.eliIcon.fontSize / 3,
-          }}
-          name="star"
-        />
+        <View style={{ ...styles.wrapperCustom, justifyContent: 'center' }}>
+          <TimeSinceDisplay
+            lastTrigger={
+              timeSenseEvent.triggerHistory.sort().at(0) ?? new UTCDate()
+            }
+          />
+        </View>
       </View>
       {showDetails ? (
         <View
