@@ -1,24 +1,25 @@
-import type { TimeSinceEvent } from '@/types/time-since-event';
+import { DEFAULT_EVENT_GLYPH } from '@/types/icons';
+import type { ITimeSenseEvent } from '@/types/time-sense-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-export type EventDetailsProps = {
-  event?: TimeSinceEvent;
+export type TsEventDetailsProps = {
+  tsEvent?: ITimeSenseEvent;
   isVisible: boolean;
-  onClose: (event?: TimeSinceEvent) => void;
+  onClose: (tsEvent?: ITimeSenseEvent) => void;
 };
 
-export default function EventDetails({
-  event,
+export default function TsEventDetails({
+  tsEvent,
   isVisible,
   onClose,
-}: EventDetailsProps) {
+}: TsEventDetailsProps) {
   const [isDirty, setIsDirty] = useState(false);
 
   const handleModalClose = (ignoreChanges: boolean = false) => {
     if (isDirty && !ignoreChanges) {
-      onClose(event);
+      onClose(tsEvent);
     } else {
       onClose();
     }
@@ -35,13 +36,13 @@ export default function EventDetails({
       <View style={styles.headerRow}>
         <MaterialIcons
           size={styles.titleText.fontSize}
-          name={event?.icon ?? 'bookmark'}
+          name={tsEvent?.icon ?? DEFAULT_EVENT_GLYPH}
         />
         <Text
           style={styles.titleText}
           onLongPress={() => handleEventNameEdit()}
         >
-          {event?.name}
+          {tsEvent?.name}
         </Text>
         <Pressable style={styles.doneButton} onPress={() => handleModalClose()}>
           <MaterialIcons
