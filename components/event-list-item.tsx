@@ -1,9 +1,9 @@
-import type { TimeSinceEventGlyph } from '@/types/icons';
+import type { TimeSenseEventGlyph } from '@/types/icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 
 type EventListItemProps = {
-  icon?: TimeSinceEventGlyph;
+  icon?: TimeSenseEventGlyph;
   id: string;
   isSelected: boolean;
   name: string;

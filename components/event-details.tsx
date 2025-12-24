@@ -1,12 +1,12 @@
-import type { TimeSinceEvent } from '@/types/time-since-event';
+import type { TimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export type EventDetailsProps = {
-  event?: TimeSinceEvent;
+  event?: TimeSenseEvent;
   isVisible: boolean;
-  onClose: (event?: TimeSinceEvent) => void;
+  onClose: (event?: TimeSenseEvent) => void;
 };
 
 export default function EventDetails({

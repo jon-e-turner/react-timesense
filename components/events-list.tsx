@@ -1,5 +1,5 @@
 import { defaultTheme as styles } from '@/themes/default-theme';
-import type { TimeSinceEvent } from '@/types/time-since-event';
+import type { TimeSenseEvent } from '@/types/time-since-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { FlatList, Modal, Pressable, type ModalProps } from 'react-native';
@@ -8,7 +8,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EventDetails, { type EventDetailsProps } from './event-details';
 import EventListItem from './event-list-item';
 
-const loadData = (): TimeSinceEvent[] => {
+const loadData = (): TimeSenseEvent[] => {
   return [
     {
       createdOn: new Date('2025-12-10T00:00:00Z'),
@@ -86,7 +86,7 @@ const AnimatedModal = Animated.createAnimatedComponent(EventDetailsModal);
 
 export default function EventsList() {
   const ref = useRef<Modal | null>(null);
-  const [events, setEvents] = useState<TimeSinceEvent[]>(loadData);
+  const [events, setEvents] = useState<TimeSenseEvent[]>(loadData);
   const [selected, setSelected] = useState<string>('');
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -97,12 +97,12 @@ export default function EventsList() {
       id: 'new', // This needs to be an idempotent function.
       name: 'new event',
       triggerHistory: [],
-    } as TimeSinceEvent;
+    } as TimeSenseEvent;
 
     setEvents([...events, newEvent]);
   };
 
-  const handleModalClose = (event?: TimeSinceEvent) => {
+  const handleModalClose = (event?: TimeSenseEvent) => {
     if (event) {
       // CRUD: update the record
     }

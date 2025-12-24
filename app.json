@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "react-timesince",
-    "slug": "timesince",
+    "name": "react-timesense",
+    "slug": "timesense",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "timesince",
+    "scheme": "timesense",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.timesince"
+      "bundleIdentifier": "com.anonymous.timesense"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +27,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "platforms": [/* "android", */ "ios", "web"],
-    "githubUrl": "https://github.com/jon-e-turner/react-timesince",
+    "githubUrl": "https://github.com/jon-e-turner/react-timesense",
     "plugins": [
       "expo-router",
       [

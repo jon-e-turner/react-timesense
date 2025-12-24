@@ -1,8 +1,8 @@
-import type { TimeSinceEventGlyph } from './icons';
+import type { TimeSenseEventGlyph } from './icons';
 
-export type TimeSinceEvent = {
+export type TimeSenseEvent = {
   createdOn: Date;
-  icon?: TimeSinceEventGlyph;
+  icon?: TimeSenseEventGlyph;
   id: string;
   name: string;
   triggerHistory: Date[];
