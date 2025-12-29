@@ -17,15 +17,13 @@ export default function TsEventListItem({
   showDetails,
 }: TsEventListItemProps) {
   return (
-    <View id={timeSenseEvent.id} style={{ flexDirection: 'column' }}>
+    <View id={timeSenseEvent.id.toString()} style={{ flexDirection: 'column' }}>
       <View aria-selected={isSelected} style={styles.tsEventListItem}>
         <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
         <View style={{ ...styles.wrapperCustom, justifyContent: 'center' }}>
           <TimeSinceDisplay
-            lastTrigger={
-              timeSenseEvent.triggerHistory.sort().at(0) ?? new UTCDate()
-            }
+            lastTrigger={timeSenseEvent.triggerHistory?.at(0) ?? new UTCDate()}
           />
         </View>
       </View>

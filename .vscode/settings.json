@@ -4,5 +4,12 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "cSpell.words": ["credentialless", "Pressable", "timesince", "tsevent"]
+  "cSpell.words": [
+    "COEP",
+    "credentialless",
+    "Pressable",
+    "timesince",
+    "tsevent",
+    "tsevents"
+  ]
 }
