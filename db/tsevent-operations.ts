@@ -54,22 +54,40 @@ export async function addTsEvent(
   const rowId = result.lastInsertRowId;
 
   if (newTsEvent.triggerHistory.length > 0) {
-    const stmt = await db.prepareAsync(
-      'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, $timestamp);'
-    );
-
-    newTsEvent.triggerHistory.map(
-      async (hist) =>
-        await stmt.executeAsync({
-          $rowId: rowId,
-          $timestamp: hist.toISOString(),
-        })
-    );
-
-    await stmt.finalizeAsync();
+    await addEventTriggers({
+      db: db,
+      rowId: rowId,
+      timestamps: newTsEvent.triggerHistory,
+    });
   }
 
   return newTsEvent;
+}
+
+export async function addEventTriggers({
+  db,
+  rowId,
+  timestamps,
+}: {
+  db: SQLiteDatabase;
+  rowId: number;
+  timestamps: UTCDate[];
+}) {
+  const stmt = await db.prepareAsync(
+    'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, $timestamp);'
+  );
+
+  try {
+    timestamps.map(
+      async (ts) =>
+        await stmt.executeAsync({
+          $rowId: rowId,
+          $timestamp: ts.toISOString(),
+        })
+    );
+  } finally {
+    await stmt.finalizeAsync();
+  }
 }
 
 async function normalizeTimeSenseEvent(
