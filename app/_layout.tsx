@@ -2,11 +2,9 @@ import LoadingScreen from '@/components/loading-screen';
 import { Stack } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StrictMode, Suspense } from 'react';
-import { initDatabaseConnection } from '../data-providers/sqlite-provider';
+import { DATABASE_NAME, initDatabaseConnection } from '../db/sqlite-provider';
 
 export default function RootLayout() {
-  const DATABASE_NAME = 'time-sense.db';
-
   return (
     <StrictMode>
       <Suspense fallback={<LoadingScreen />}>

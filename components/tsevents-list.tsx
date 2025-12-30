@@ -1,6 +1,6 @@
+import { addTsEvent, getAllTsEvents } from '@/db/tsevent-operations';
 import { defaultTheme as styles } from '@/themes/default-theme';
-import { TimeSenseEvent, type ITimeSenseEvent } from '@/types/time-sense-event';
-import { UTCDate } from '@date-fns/utc';
+import { type ITimeSenseEvent } from '@/types/time-sense-event';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
@@ -16,37 +16,14 @@ export default function TsEventsList() {
 
   useEffect(() => {
     async function loadData(db: SQLiteDatabase) {
-      const data = await db.getAllAsync<
-        TimeSenseEvent & { triggerHistory?: string }
-      >(
-        `SELECT
-          ts.rowid as id, ts.createdOn, ts.details, ts.icon, ts.name,
-          COALESCE(GROUP_CONCAT(et.triggerTimestamp, ','), '') as triggerHistory
-        FROM timeSenseEvents AS ts
-        LEFT JOIN eventTriggers AS et
-        ON ts.rowid == et.tsEventId
-        GROUP BY ts.rowid;`
-      );
-
-      const normData = data.map((d) => {
-        if (d.triggerHistory && typeof d.triggerHistory == 'string') {
-          const histAsArray: UTCDate[] = d.triggerHistory
-            .split(',')
-            .map((h) => new UTCDate(h));
-
-          return { ...d, triggerHistory: histAsArray };
-        }
-
-        return new TimeSenseEvent({ ...d, triggerHistory: [] });
-      });
-
-      setTsEvents(normData);
+      const data = await getAllTsEvents(db);
+      setTsEvents(data);
     }
     loadData(db);
   }, [db]);
 
-  const handleAddItemPress = () => {
-    const newTsEvent = new TimeSenseEvent({
+  const handleAddItemPress = async () => {
+    const newTsEvent = await addTsEvent(db, {
       icon: 'lightbulb-outline',
       name: 'new event',
     });
