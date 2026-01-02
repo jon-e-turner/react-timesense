@@ -35,9 +35,15 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+.hintrc
 
 app-example
 
 # generated native folders
 /ios
 /android
+
+# local-only database files
+
+*.db-shm
+*.db-wal
