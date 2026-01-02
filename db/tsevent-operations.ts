@@ -1,27 +1,9 @@
+import type { HistoryTag } from '@/types/history-tag';
 import { type ITimeSenseEvent, TimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
-type TsEventDto = TimeSenseEvent & { triggerHistory?: string };
-
-export async function getAllTsEvents(
-  db: SQLiteDatabase
-): Promise<ITimeSenseEvent[]> {
-  const rawData = await db.getAllAsync<TsEventDto>(
-    `SELECT
-      ts.rowid AS id, ts.createdOn, ts.details, ts.icon, ts.name,
-      COALESCE(GROUP_CONCAT(et.triggerTimestamp, ','), '') AS triggerHistory
-    FROM timeSenseEvents AS ts
-    LEFT JOIN eventTriggers AS et
-    ON ts.rowid == et.tsEventId
-    GROUP BY ts.rowid;`
-  );
-
-  return await Promise.all(
-    rawData.map(async (evt) => await normalizeTimeSenseEvent(evt))
-  );
-}
-
+// CREATE Operations
 export async function addTsEvent(
   db: SQLiteDatabase,
   tsEvent: Partial<ITimeSenseEvent> & { name: string }
@@ -31,11 +13,10 @@ export async function addTsEvent(
   const result = await db
     .runAsync(
       `
-    INSERT INTO timeSenseEvents (createdOn, details, icon, name)
-      VALUES ($createdOn, $details, $icon, $name);
+    INSERT INTO timeSenseEvents (details, icon, name)
+      VALUES ($details, $icon, $name);
     `,
       {
-        $createdOn: newTsEvent.createdOn.toISOString(),
         $details: newTsEvent.details ?? null,
         $icon: newTsEvent.icon,
         $name: newTsEvent.name,
@@ -71,38 +52,74 @@ export async function addEventTriggers({
 }: {
   db: SQLiteDatabase;
   rowId: number;
-  timestamps: UTCDate[];
+  timestamps: {
+    timestamp: UTCDate;
+    tags: HistoryTag[];
+  }[];
 }) {
   const stmt = await db.prepareAsync(
     'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, $timestamp);'
   );
 
   try {
-    timestamps.map(
-      async (ts) =>
-        await stmt.executeAsync({
-          $rowId: rowId,
-          $timestamp: ts.toISOString(),
-        })
-    );
+    timestamps.map(async (ts) => {
+      const normTs = {
+        timestamp: ts.timestamp.toISOString(),
+        tags: ts.tags as string[],
+      };
+      await stmt.executeAsync({
+        $rowId: rowId,
+        $timestamp: JSON.stringify(normTs),
+      });
+    });
   } finally {
     await stmt.finalizeAsync();
   }
 }
 
-async function normalizeTimeSenseEvent(
-  tsEvent: TsEventDto
-): Promise<ITimeSenseEvent> {
-  if (tsEvent.triggerHistory && typeof tsEvent.triggerHistory == 'string') {
-    const histAsArray: UTCDate[] = tsEvent.triggerHistory
-      .split(',')
-      .map((h) => new UTCDate(h));
+// READ Operations
+export async function getAllTsEvents(
+  db: SQLiteDatabase
+): Promise<ITimeSenseEvent[]> {
+  return await db.getAllAsync<TimeSenseEvent>(
+    `SELECT
+      ts.rowid AS id, ts.details, ts.icon, ts.name,
+      et.triggerTimestamp as triggerTimestamp
+    FROM timeSenseEvents AS ts
+    LEFT JOIN eventTriggers AS et
+    ON ts.rowid == et.tsEventId
+    GROUP BY ts.rowid;`
+  );
+}
 
-    return new TimeSenseEvent({ ...tsEvent, triggerHistory: histAsArray });
-  }
+export async function getTsEventById(
+  db: SQLiteDatabase,
+  id: number
+): Promise<ITimeSenseEvent | null> {
+  return await db.getFirstAsync<TimeSenseEvent>(`
+    SELECT
+      ts.rowid AS id, ts.details, ts.icon, ts.name,
+      et.triggerTimestamp as triggerTimestamp
+    FROM timeSenseEvents AS ts
+    WHERE ts.id == ${id}
+    LEFT JOIN eventTriggers AS et
+    ON ts.rowid == et.tsEventId;
+    `);
+}
 
-  return new TimeSenseEvent({
-    ...tsEvent,
-    triggerHistory: tsEvent.triggerHistory,
-  });
+// UPDATE Operations
+// export async function updateTsEvent(
+//   db: SQLiteDatabase,
+//   newTsEvent: Partial<ITimeSenseEvent> & { id: number }
+// ): Promise<ITimeSenseEvent> {
+//   const current = await getTsEventById(db, newTsEvent.id);
+
+//   // Walk current and put fields with differences in a dictionary.
+//   return newTsEvent;
+// }
+
+// DELETE Operations
+
+async function normalizeTsEvent(tsEvent: TimeSenseEvent) {
+  // Still need the DTO, I think. Pick up here tomorrow.
 }

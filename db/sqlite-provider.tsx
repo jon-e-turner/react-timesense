@@ -6,7 +6,7 @@ const DATABASE_VERSION = 2;
 export async function initDatabaseConnection(db: SQLiteDatabase) {
   await migrateDbIfNeeded(db);
 
-  console.log(await db.getAllAsync(`SELECT * FROM timeSenseEvents`));
+  console.log(await db.getFirstAsync(`PRAGMA user_version;`));
 }
 
 /**
@@ -15,32 +15,36 @@ export async function initDatabaseConnection(db: SQLiteDatabase) {
  * @returns A Promise containing the same `db` object as passed in, to enable chaining.
  */
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
-  let { user_version: currentDbVersion } = (await db.getFirstAsync<{
-    user_version: number;
-  }>('PRAGMA user_version;')) ?? { user_version: 0 };
+  let { user_version: currentDbVersion } = { user_version: 0 };
   if (currentDbVersion >= DATABASE_VERSION) {
     return;
   }
   if (currentDbVersion === 0) {
+    // TODO: DO NOT CHECK THIS IN
+    await db.runAsync(`
+      DROP INDEX IF EXISTS triggerIndex;
+      DROP TABLE IF EXISTS eventTriggers;
+      DROP TABLE IF EXISTS timeSenseEvents;
+    `);
+
     // New install, so initialize the database.
     await db.execAsync(`
-PRAGMA journal_mode = 'wal';
-PRAGMA foreign_keys = 1;
+      PRAGMA journal_mode = 'wal';
+      PRAGMA foreign_keys = 1;
 
-CREATE TABLE IF NOT EXISTS timeSenseEvents (
-  id INTEGER PRIMARY KEY NOT NULL,
-  createdOn TEXT NOT NULL,
-  details BLOB,
-  icon TEXT,
-  name TEXT NOT NULL
-  );
-CREATE TABLE IF NOT EXISTS eventTriggers(
-  tsEventId INTEGER,
-  triggerTimestamp TEXT,
-  FOREIGN KEY (tsEventId) REFERENCES timeSenseEvents(id) ON UPDATE CASCADE ON DELETE CASCADE
-  );
-CREATE INDEX IF NOT EXISTS triggerIndex ON eventTriggers(tsEventId);
-          `);
+      CREATE TABLE IF NOT EXISTS timeSenseEvents (
+        id INTEGER PRIMARY KEY NOT NULL,
+        details BLOB,
+        icon TEXT,
+        name TEXT NOT NULL
+        );
+      CREATE TABLE IF NOT EXISTS eventTriggers(
+        tsEventId INTEGER,
+        triggerTimestamp JSON,
+        FOREIGN KEY (tsEventId) REFERENCES timeSenseEvents(id) ON UPDATE CASCADE ON DELETE CASCADE
+        );
+      CREATE INDEX IF NOT EXISTS triggerIndex ON eventTriggers(tsEventId);
+    `);
     currentDbVersion = 1;
   }
   if (currentDbVersion === 1) {
@@ -48,7 +52,7 @@ CREATE INDEX IF NOT EXISTS triggerIndex ON eventTriggers(tsEventId);
     currentDbVersion = 2;
   }
 
-  await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION};`);
+  await db.execAsync(`PRAGMA user_version = ${currentDbVersion};`);
 }
 
 // REMOVE THIS BEFORE MERGING TO MAIN
@@ -56,27 +60,37 @@ async function seedInitialData(db: SQLiteDatabase) {
   console.log(db.databasePath);
   if ((await db.getFirstAsync(`SELECT * FROM timeSenseEvents;`)) !== null) {
     await db.execAsync(`
-BEGIN;
-DELETE FROM eventTriggers;
-DELETE FROM timeSenseEvents;
-COMMIT;
-      `);
+      BEGIN;
+      DELETE FROM eventTriggers;
+      DELETE FROM timeSenseEvents;
+      COMMIT;
+    `);
   }
 
   await db.withTransactionAsync(async () => {
     await db.execAsync(`
-INSERT INTO timeSenseEvents (createdOn, icon, name) values ('2025-12-10T00:00:00Z', 'bookmark', 'first event');
-INSERT INTO timeSenseEvents (createdOn, icon, name) values ('2025-12-10T00:00:00Z', 'bookmark-outline', 'second event');
-INSERT INTO timeSenseEvents (createdOn, icon, name) values ('2025-12-10T00:00:00Z', 'favorite', 'third event');
-INSERT INTO timeSenseEvents (createdOn, icon, name) values ('2025-12-10T00:00:00Z', 'work', 'fourth event');
-INSERT INTO timeSenseEvents (createdOn, icon, name) values ('2025-12-10T00:00:00Z', 'work-outline', 'fifth event');
+      INSERT INTO timeSenseEvents (icon, name) values ('bookmark', 'first event');
+      INSERT INTO timeSenseEvents (icon, name) values ('bookmark-outline', 'second event');
+      INSERT INTO timeSenseEvents (icon, name) values ('favorite', 'third event');
+      INSERT INTO timeSenseEvents (icon, name) values ('work', 'fourth event');
+      INSERT INTO timeSenseEvents (icon, name) values ('work-outline', 'fifth event');
 
-INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, '1997-11-06T00:35:00Z');
-INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '2025-12-23T00:00:00Z');
-INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '2023-05-23T02:30:00Z');
-        `);
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (1, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (2, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (5, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta,"user"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, '{"timestamp":"1997-11-06T00:35:00Z","tags":["user"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2025-12-23T00:00:00Z","tags":["user"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2023-05-23T02:30:00Z","tags":["user"]}');
+    `);
   });
 
-  console.log(await db.getFirstAsync(`SELECT * FROM timeSenseEvents;`));
+  console.log(
+    await db.getFirstAsync(`SELECT * FROM timeSenseEvents WHERE rowid == 3;`)
+  );
+  console.log(
+    await db.getFirstAsync(`SELECT * FROM eventTriggers WHERE tsEventId == 5;`)
+  );
   return;
 }

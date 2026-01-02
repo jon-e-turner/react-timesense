@@ -53,7 +53,7 @@
       [
         "expo-asset",
         {
-          "assets": ["./assets/db/time-sense.db", "./assets/db/sqlite-init.sql"]
+          "assets": ["./assets/db/time-sense.db"]
         }
       ]
     ],
