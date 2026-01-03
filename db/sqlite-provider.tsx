@@ -75,14 +75,14 @@ async function seedInitialData(db: SQLiteDatabase) {
       INSERT INTO timeSenseEvents (icon, name) values ('work', 'fourth event');
       INSERT INTO timeSenseEvents (icon, name) values ('work-outline', 'fifth event');
 
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (1, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (2, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (5, '{"timestamp":"2025-12-10T00:00:00Z","tags":["meta,"user"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, '{"timestamp":"1997-11-06T00:35:00Z","tags":["user"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2025-12-23T00:00:00Z","tags":["user"]}');
-      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, '{"timestamp":"2023-05-23T02:30:00Z","tags":["user"]}');
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (1, json('{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (2, json('{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, json('{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, json('{"timestamp":"2025-12-10T00:00:00Z","tags":["meta"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (5, json('{"timestamp":"2025-12-10T00:00:00Z","tags":["meta","user"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, json('{"timestamp":"1997-11-06T00:35:00Z","tags":["user"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, json('{"timestamp":"2025-12-23T00:00:00Z","tags":["user"]}'));
+      INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, json('{"timestamp":"2023-05-23T02:30:00Z","tags":["user"]}'));
     `);
   });
 

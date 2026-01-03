@@ -1,4 +1,5 @@
 import { defaultTheme } from '@/themes/default-theme';
+import type { HistoryTag } from '@/types/history-tag';
 import type { ITimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -10,6 +11,28 @@ type TsEventListItemProps = {
   isSelected: boolean;
   showDetails: boolean;
 };
+
+function getLatestTrigger(
+  history?: { tags: HistoryTag[]; timestamp: UTCDate }[]
+): UTCDate | undefined {
+  if (history) {
+    switch (history?.length) {
+      case undefined:
+      case 0:
+        return undefined;
+      case 1:
+        return new UTCDate(history[0].timestamp);
+      default:
+        return new UTCDate(
+          history.reduce((a, b) =>
+            a.timestamp > b.timestamp ? a : b
+          ).timestamp
+        );
+    }
+  }
+
+  return undefined;
+}
 
 export default function TsEventListItem({
   timeSenseEvent,
@@ -23,7 +46,9 @@ export default function TsEventListItem({
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
         <View style={{ ...styles.wrapperCustom, justifyContent: 'center' }}>
           <TimeSinceDisplay
-            lastTrigger={timeSenseEvent.triggerHistory?.at(0) ?? new UTCDate()}
+            lastTrigger={
+              getLatestTrigger(timeSenseEvent.triggerHistory) ?? new UTCDate()
+            }
           />
         </View>
       </View>

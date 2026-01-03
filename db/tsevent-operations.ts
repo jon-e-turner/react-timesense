@@ -6,7 +6,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 // CREATE Operations
 export async function addTsEvent(
   db: SQLiteDatabase,
-  tsEvent: Partial<ITimeSenseEvent> & { name: string }
+  tsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'name'>
 ): Promise<ITimeSenseEvent> {
   const newTsEvent = new TimeSenseEvent(tsEvent);
 
@@ -78,33 +78,47 @@ export async function addEventTriggers({
 }
 
 // READ Operations
-export async function getAllTsEvents(
+export async function getAllTsEvents( // TODO: Paginate this
   db: SQLiteDatabase
 ): Promise<ITimeSenseEvent[]> {
-  return await db.getAllAsync<TimeSenseEvent>(
-    `SELECT
-      ts.rowid AS id, ts.details, ts.icon, ts.name,
-      et.triggerTimestamp as triggerTimestamp
+  return (
+    await db.getAllAsync<TimeSenseEvent>(`
+    SELECT ts.id, ts.details, ts.icon, ts.name,
+      json_group_array(json(et.triggerTimestamp)) as triggerHistory
     FROM timeSenseEvents AS ts
     LEFT JOIN eventTriggers AS et
     ON ts.rowid == et.tsEventId
-    GROUP BY ts.rowid;`
-  );
+    GROUP BY ts.rowid;
+  `)
+  ).map((res) => {
+    // TODO: Figure out how to not need this step. It makes the db read synchronous.
+    res.triggerHistory = JSON.parse(res.triggerHistory as any as string);
+    return new TimeSenseEvent(res);
+  });
+
+  // return db_json.map((js) => new TimeSenseEvent(js));
 }
 
 export async function getTsEventById(
   db: SQLiteDatabase,
   id: number
 ): Promise<ITimeSenseEvent | null> {
-  return await db.getFirstAsync<TimeSenseEvent>(`
-    SELECT
-      ts.rowid AS id, ts.details, ts.icon, ts.name,
-      et.triggerTimestamp as triggerTimestamp
+  const res = await db.getFirstAsync<TimeSenseEvent>(`
+    SELECT ts.id, ts.details, ts.icon, ts.name,
+      json_group_array(json(et.triggerTimestamp)) as triggerHistory
     FROM timeSenseEvents AS ts
-    WHERE ts.id == ${id}
     LEFT JOIN eventTriggers AS et
-    ON ts.rowid == et.tsEventId;
-    `);
+    ON ts.id == et.tsEventId
+    WHERE ts.id == ${id}
+    GROUP BY ts.id;
+  `);
+
+  if (res === null) {
+    return null;
+  }
+
+  res.triggerHistory = JSON.parse(res.triggerHistory as any as string);
+  return new TimeSenseEvent(res);
 }
 
 // UPDATE Operations
@@ -119,7 +133,3 @@ export async function getTsEventById(
 // }
 
 // DELETE Operations
-
-async function normalizeTsEvent(tsEvent: TimeSenseEvent) {
-  // Still need the DTO, I think. Pick up here tomorrow.
-}
