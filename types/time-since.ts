@@ -1,3 +1,12 @@
+import { UTCDate } from '@date-fns/utc';
+import {
+  differenceInCalendarDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+  differenceInYears,
+} from 'date-fns';
+
 export interface ITimeSince {
   years: number;
   days: number;
@@ -15,18 +24,17 @@ export class TimeSince implements ITimeSince {
   seconds: number;
   refreshInterval: number;
 
-  constructor(
-    years?: number,
-    days?: number,
-    hours?: number,
-    minutes?: number,
-    seconds?: number
-  ) {
-    this.years = years ?? 0;
-    this.days = days ?? 0;
-    this.hours = hours ?? 0;
-    this.minutes = minutes ?? 0;
-    this.seconds = seconds ?? 0;
+  constructor(currentTime: UTCDate, lastTrigger: UTCDate) {
+    this.years = differenceInYears(currentTime, lastTrigger);
+    this.days =
+      differenceInCalendarDays(currentTime, lastTrigger) -
+      differenceInCalendarDays(
+        new UTCDate(`${currentTime.getFullYear()}-01-01T00:00:00Z`),
+        new UTCDate(`${lastTrigger.getFullYear()}-01-01T00:00:00Z`)
+      ); // Can't use modulus here, since there's not a constant number of days in a year.
+    this.hours = differenceInHours(currentTime, lastTrigger) % 24;
+    this.minutes = differenceInMinutes(currentTime, lastTrigger) % 60;
+    this.seconds = differenceInSeconds(currentTime, lastTrigger) % 60;
 
     const multiplier =
       this.years > 0
