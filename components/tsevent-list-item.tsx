@@ -60,7 +60,9 @@ export default function TsEventListItem({
             visibility: showDetails ? 'visible' : 'hidden',
           }}
         >
-          <Text style={styles.eliDetailText}>Lorum ipsum dolos et.</Text>
+          <Text style={styles.eliDetailText}>
+            {timeSenseEvent.details ?? 'Romanes eunt domus'}
+          </Text>
         </View>
       ) : null}
     </View>
