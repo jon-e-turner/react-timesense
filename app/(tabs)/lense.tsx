@@ -1,66 +1,9 @@
+import LenseTestResult from '@/components/lense-test-result';
 import { defaultTheme } from '@/themes/default-theme';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useState } from 'react';
-
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  type GestureResponderEvent,
-} from 'react-native';
-
-const ITEM_HEIGHT = 80;
-
-// Before adding this to main, write tests, get a reporting API set up, and then point this page at it.
-const DATA = [
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  false,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-];
+import { LenseTests } from '@/types/lense-check';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 export default function LenseScreen() {
-  const [data, setData] = useState<boolean[]>(DATA);
-
-  const handleResponseBoxOnPress = (evt: GestureResponderEvent) => {};
-
   return (
     <View style={styles.lensScreen}>
       <Text style={{ ...styles.text }}>
@@ -69,29 +12,9 @@ export default function LenseScreen() {
       <View style={styles.hr} />
       <View style={{ marginHorizontal: 'auto' }}>
         <FlatList
-          data={data}
+          data={LenseTests}
           renderItem={({ item, index }) => (
-            <Pressable
-              // These functions currently have a huge effect and trigger too many renders.
-              // onPointerEnter={() => setUnderPointer(index)}
-              // onPointerLeave={() => setUnderPointer(undefined)}
-              onPress={handleResponseBoxOnPress}
-              style={({ pressed }) => [
-                {
-                  ...styles.responseBox,
-                  borderColor: pressed ? '#ffd33d' : '#25292e',
-                },
-              ]}
-            >
-              <MaterialCommunityIcons
-                key={index}
-                style={{
-                  ...styles.responseIcon,
-                  color: item ? 'green' : 'white',
-                }}
-                name={item ? 'heart' : 'heart-broken'}
-              />
-            </Pressable>
+            <LenseTestResult key={index} checkToRun={item} itemHeight={80} />
           )}
           numColumns={5}
         />
@@ -117,17 +40,5 @@ const styles = StyleSheet.create({
     marginStart: '7.5%', // Should always be half of 100 - width
     width: '85%',
     padding: 4,
-  },
-  responseBox: {
-    backgroundColor: '#25292e',
-    height: ITEM_HEIGHT,
-    width: ITEM_HEIGHT,
-    justifyContent: 'flex-start',
-    borderWidth: 2,
-    margin: 4,
-  },
-  responseIcon: {
-    fontSize: ITEM_HEIGHT * 0.85,
-    margin: 'auto',
   },
 });

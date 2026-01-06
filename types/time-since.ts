@@ -48,6 +48,36 @@ export class TimeSince implements ITimeSince {
     this.refreshInterval = 1000 * multiplier;
   }
 
+  public equals(that: this): boolean {
+    if (typeof this !== typeof that) {
+      return false;
+    }
+
+    return (
+      that.years === this.years &&
+      that.days === this.days &&
+      that.hours === this.hours &&
+      that.minutes === this.minutes &&
+      that.seconds === this.seconds &&
+      that.refreshInterval === this.refreshInterval
+    );
+  }
+
+  public static equals(first: TimeSince, second: TimeSince): boolean {
+    if (typeof first !== typeof second && typeof first !== typeof TimeSince) {
+      return false;
+    }
+
+    return (
+      second.years === first.years &&
+      second.days === first.days &&
+      second.hours === first.hours &&
+      second.minutes === first.minutes &&
+      second.seconds === first.seconds &&
+      second.refreshInterval === first.refreshInterval
+    );
+  }
+
   public toString(): string {
     const yearsPart = this.years > 0 ? `${this.years}Y ` : '';
     const daysPart = this.days > 0 ? `${this.days}D ` : '';
