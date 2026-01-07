@@ -1,15 +1,33 @@
 import { UTCDate } from '@date-fns/utc';
 import { interval, intervalToDuration, type Duration } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
+const ONE_DAY = 86400000;
+const ONE_MINUTE = 60000;
+const ONE_SECOND = 1000;
 
 export default function TimeSinceDisplay({ lastTrigger = new UTCDate() }) {
   const [currentTime, setCurrentTime] = useState(new UTCDate());
 
   const timeSince = intervalToDuration(interval(lastTrigger, currentTime));
 
-  const refreshInterval =
-    (timeSince.years ?? 0 === 0) && (timeSince.days ?? 0 === 0) ? 1000 : 86400; //24 * 60 * 60
+  const getRefreshInterval = useCallback(() => {
+    if (timeSince.years && timeSince.years > 0) {
+      return ONE_DAY;
+    }
+
+    if (timeSince.months && timeSince.months > 0) {
+      return ONE_DAY;
+    }
+
+    if (timeSince.days && timeSince.days > 0) {
+      return ONE_MINUTE;
+    }
+
+    return ONE_SECOND;
+  }, [timeSince.years, timeSince.months, timeSince.days]);
+  const refreshInterval = getRefreshInterval();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,10 +46,7 @@ export default function TimeSinceDisplay({ lastTrigger = new UTCDate() }) {
   );
 }
 
-function formatDuration(
-  duration: Duration,
-  refreshInterval: number = 1000
-): string {
+function formatDuration(duration: Duration, refreshInterval: number): string {
   const normalizedDuration = {
     years: duration.years ?? 0,
     months: duration.months ?? 0,
@@ -42,11 +57,11 @@ function formatDuration(
   };
 
   const yearsPart =
-    normalizedDuration.years > 0 ? `${normalizedDuration.years}Y ` : '';
+    normalizedDuration.years > 0 ? `${normalizedDuration.years}` : '';
   const monthsPart =
-    normalizedDuration.months > 0 ? `${normalizedDuration.months}M ` : '';
+    normalizedDuration.months > 0 ? `${normalizedDuration.months}` : '';
   const daysPart =
-    normalizedDuration.days > 0 ? `${normalizedDuration.days}D ` : '';
+    normalizedDuration.days > 0 ? `${normalizedDuration.days}` : '';
   const hoursPart =
     normalizedDuration.hours > 0
       ? normalizedDuration.hours < 10 &&
@@ -69,10 +84,13 @@ function formatDuration(
       : '00';
 
   switch (refreshInterval) {
-    case 1000:
-      return `${yearsPart}${monthsPart}${daysPart}${hoursPart}:${minutesPart}:${secondsPart}`;
+    case ONE_SECOND:
+      return `${hoursPart}:${minutesPart}:${secondsPart}`;
+    case ONE_MINUTE:
+      return `${daysPart}D ${hoursPart}:${minutesPart}`;
+    case ONE_DAY:
     default:
-      return `${yearsPart}${monthsPart}${daysPart}${hoursPart}H`;
+      return `${yearsPart}Y ${monthsPart}M ${daysPart}D`;
   }
 }
 
