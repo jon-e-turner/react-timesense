@@ -1,6 +1,7 @@
 import { addTsEvent, getAllTsEvents } from '@/db/tsevent-operations';
 import { defaultTheme as styles } from '@/themes/default-theme';
 import { type ITimeSenseEvent } from '@/types/time-sense-event';
+import { UTCDate } from '@date-fns/utc';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
@@ -26,6 +27,7 @@ export default function TsEventsList() {
     const newTsEvent = await addTsEvent(db, {
       icon: 'lightbulb-outline',
       name: 'new event',
+      triggerHistory: [{ timestamp: new UTCDate(), tags: ['meta'] }],
     });
 
     setTsEvents([...tsEvents, newTsEvent]);

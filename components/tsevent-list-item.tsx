@@ -45,11 +45,11 @@ export default function TsEventListItem({
         <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
         <View style={{ ...styles.wrapperCustom, justifyContent: 'center' }}>
-          <TimeSinceDisplay
-            lastTrigger={
-              getLatestTrigger(timeSenseEvent.triggerHistory) ?? new UTCDate()
-            }
-          />
+          {timeSenseEvent.triggerHistory[0] !== null ? (
+            <TimeSinceDisplay
+              lastTrigger={getLatestTrigger(timeSenseEvent.triggerHistory)}
+            />
+          ) : null}
         </View>
       </View>
       {showDetails ? (

@@ -26,9 +26,7 @@ export class TimeSenseEvent implements ITimeSenseEvent {
   constructor(tsEvent: Partial<TimeSenseEvent> & { name: string }) {
     this.name = tsEvent.name;
     this.id = tsEvent.id ?? 0;
-    this.triggerHistory = tsEvent.triggerHistory ?? [
-      { timestamp: new UTCDate(), tags: ['meta'] },
-    ];
+    this.triggerHistory = tsEvent.triggerHistory ?? [];
     this.icon = tsEvent.icon ?? DEFAULT_EVENT_GLYPH;
     this.details = tsEvent.details;
   }
