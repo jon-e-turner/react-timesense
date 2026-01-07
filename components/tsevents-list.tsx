@@ -16,7 +16,7 @@ export default function TsEventsList() {
 
   useEffect(() => {
     async function loadData(db: SQLiteDatabase) {
-      const data = await getAllTsEvents(db);
+      const data = await getAllTsEvents(db, true);
       setTsEvents(data);
     }
     loadData(db);

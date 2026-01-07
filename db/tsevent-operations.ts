@@ -79,15 +79,17 @@ export async function addEventTriggers({
 
 // READ Operations
 export async function getAllTsEvents( // TODO: Paginate this
-  db: SQLiteDatabase
+  db: SQLiteDatabase,
+  userOnly: boolean = false
 ): Promise<ITimeSenseEvent[]> {
   return (
     await db.getAllAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
       json_group_array(json(et.triggerTimestamp)) as triggerHistory
     FROM timeSenseEvents AS ts
-    LEFT JOIN eventTriggers AS et
+    LEFT JOIN eventTriggers AS et, json_each(et.triggerTimestamp, '$.tags')
     ON ts.rowid == et.tsEventId
+    ${userOnly ? "WHERE json_each.value == 'user'" : ''}
     GROUP BY ts.rowid;
   `)
   ).map((res) => {
