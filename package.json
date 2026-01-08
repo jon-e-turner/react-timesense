@@ -16,7 +16,7 @@
     "@react-navigation/elements": "^2.9.3",
     "@react-navigation/native": "^7.1.26",
     "date-fns": "^4.1.0",
-    "expo": "~54.0.30",
+    "expo": "~54.0.31",
     "expo-constants": "~18.0.12",
     "expo-dev-client": "~6.0.20",
     "expo-font": "~14.0.10",
