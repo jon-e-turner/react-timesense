@@ -58,7 +58,7 @@ export async function addEventTriggers({
   }[];
 }) {
   const stmt = await db.prepareAsync(
-    'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, $timestamp);'
+    'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, json($timestamp));'
   );
 
   try {
