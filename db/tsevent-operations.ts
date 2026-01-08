@@ -100,8 +100,6 @@ export async function getAllTsEvents( // TODO: Paginate this
     res.triggerHistory = JSON.parse(res.triggerHistory as any as string);
     return new TimeSenseEvent(res);
   });
-
-  // return db_json.map((js) => new TimeSenseEvent(js));
 }
 
 export async function getTsEventById(
@@ -127,14 +125,73 @@ export async function getTsEventById(
 }
 
 // UPDATE Operations
-// export async function updateTsEvent(
-//   db: SQLiteDatabase,
-//   newTsEvent: Partial<ITimeSenseEvent> & { id: number }
-// ): Promise<ITimeSenseEvent> {
-//   const current = await getTsEventById(db, newTsEvent.id);
 
-//   // Walk current and put fields with differences in a dictionary.
-//   return newTsEvent;
-// }
+/**
+ * Use this function to update an existing `TimeSenseEvent `record. The `id` is assigned
+ * by the database and is immutable. Since `eventTriggers` are considered immutable in
+ * the library's data model, this function also does not update the trigger history. Use
+ * either `addEventTrigger()` or `deleteEventTrigger()` as appropriate instead.
+ *
+ * @param db The database context.
+ * @param newTsEvent The updated TimeSenseEvent; `newTsEvent.id` must be defined.
+ * @returns A Promise that wil resolve to either the updated TimeSenseEvent or null on an error
+ */
+export async function updateTsEvent(
+  db: SQLiteDatabase,
+  newTsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'id'>
+): Promise<ITimeSenseEvent | null> {
+  const dbRecord = await getTsEventById(db, newTsEvent.id);
+  const columns: string[] = [];
+  const values: (keyof ITimeSenseEvent | null)[] = [];
+
+  if (!dbRecord) {
+    throw new Error(
+      `Could not locate database record with id ${newTsEvent.id}`
+    );
+  }
+
+  for (const prop in newTsEvent) {
+    if (prop === 'id' || prop === 'triggerHistory') continue;
+    if (!dbRecord[prop] || dbRecord[prop] !== newTsEvent[prop]) {
+      columns.push(prop);
+      values.push(newTsEvent[prop]);
+    }
+  }
+
+  for (const prop in dbRecord) {
+    if (prop === 'id' || prop === 'triggerHistory') continue;
+    if (!newTsEvent[prop]) {
+      columns.push(prop);
+      values.push(null);
+    }
+  }
+
+  if (columns.length !== values.length) {
+    throw new Error(
+      `The columns and values arrays must be the same length.
+      \tcolumns.length: ${columns.length}
+      \tvalues.length: ${values.length}`
+    );
+  }
+
+  const result = await db
+    .runAsync(
+      `
+    UPDATE OR REPLACE timeSenseEvents
+    SET ($columns) = ($values)
+    WHERE id == $id;
+    `,
+      {
+        $columns: columns.join(', '),
+        $values: values.join(', '),
+        $id: newTsEvent.id,
+      }
+    )
+    .catch((reason) => {
+      throw new Error(`Insert operation failed with error: ${reason}`);
+    });
+
+  return await getTsEventById(db, result.lastInsertRowId);
+}
 
 // DELETE Operations

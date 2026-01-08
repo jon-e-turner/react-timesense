@@ -3,6 +3,7 @@ import type { HistoryTag } from './history-tag';
 import { DEFAULT_EVENT_GLYPH, type TimeSenseEventGlyph } from './icons';
 
 export interface ITimeSenseEvent {
+  [index: string]: any;
   details?: string;
   icon: TimeSenseEventGlyph;
   id: number;
