@@ -15,17 +15,19 @@ export async function initDatabaseConnection(db: SQLiteDatabase) {
  * @returns A Promise containing the same `db` object as passed in, to enable chaining.
  */
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
-  let { user_version: currentDbVersion } = { user_version: 0 };
+  let { user_version: currentDbVersion } = (await db.getFirstAsync<{
+    user_version: number;
+  }>(`PRAGMA user_version;`)) ?? { user_version: 0 };
   if (currentDbVersion >= DATABASE_VERSION) {
     return;
   }
   if (currentDbVersion === 0) {
     // TODO: DO NOT CHECK THIS IN
-    await db.runAsync(`
-      DROP INDEX IF EXISTS triggerIndex;
-      DROP TABLE IF EXISTS eventTriggers;
-      DROP TABLE IF EXISTS timeSenseEvents;
-    `);
+    // await db.runAsync(`
+    //   DROP INDEX IF EXISTS triggerIndex;
+    //   DROP TABLE IF EXISTS eventTriggers;
+    //   DROP TABLE IF EXISTS timeSenseEvents;
+    // `);
 
     // New install, so initialize the database.
     await db.execAsync(`

@@ -105,7 +105,7 @@ export async function getAllTsEvents( // TODO: Paginate this
 export async function getTsEventById(
   db: SQLiteDatabase,
   id: number
-): Promise<ITimeSenseEvent | null> {
+): Promise<ITimeSenseEvent> {
   const res = await db.getFirstAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
       json_group_array(json(et.triggerTimestamp)) as triggerHistory
@@ -117,7 +117,7 @@ export async function getTsEventById(
   `);
 
   if (res === null) {
-    return null;
+    throw new Error(`Could not locate db record with id ${id}`);
   }
 
   res.triggerHistory = JSON.parse(res.triggerHistory as any as string);
@@ -139,7 +139,7 @@ export async function getTsEventById(
 export async function updateTsEvent(
   db: SQLiteDatabase,
   newTsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'id'>
-): Promise<ITimeSenseEvent | null> {
+): Promise<ITimeSenseEvent> {
   const dbRecord = await getTsEventById(db, newTsEvent.id);
   const columns: string[] = [];
   const values: (keyof ITimeSenseEvent | null)[] = [];
@@ -191,7 +191,7 @@ export async function updateTsEvent(
       throw new Error(`Insert operation failed with error: ${reason}`);
     });
 
-  return await getTsEventById(db, result.lastInsertRowId);
+  return await getTsEventById(db, newTsEvent.id); //result.lastInsertRowId);
 }
 
 // DELETE Operations

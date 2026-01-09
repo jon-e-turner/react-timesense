@@ -1,4 +1,8 @@
-import { addTsEvent, getAllTsEvents } from '@/db/tsevent-operations';
+import {
+  addTsEvent,
+  getAllTsEvents,
+  updateTsEvent,
+} from '@/db/tsevent-operations';
 import { defaultTheme as styles } from '@/themes/default-theme';
 import { type ITimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
@@ -7,6 +11,7 @@ import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import TsEventDetails from './tsevent-details';
 import TsEventListItem from './tsevent-list-item';
 
 export default function TsEventsList() {
@@ -41,6 +46,24 @@ export default function TsEventsList() {
     }
   };
 
+  const handleListItemDetailsChange = async (details: string, id: number) => {
+    const existing = tsEvents.find((t) => t.id === id);
+    if (!existing) {
+      throw new Error(`We should never get here, wtf?
+        \ttsEvents: ${tsEvents}
+        \texisting: ${existing}
+        \tdetails: ${details}
+        \tid: ${id}`);
+    }
+
+    const newTsEvent = await updateTsEvent(db, {
+      ...existing,
+      details: details,
+    });
+
+    setTsEvents([...tsEvents, newTsEvent]);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -68,8 +91,14 @@ export default function TsEventsList() {
                 <TsEventListItem
                   timeSenseEvent={item}
                   isSelected={item.id === selected}
-                  showDetails={detailsExpanded.includes(item.id!)}
                 />
+                {detailsExpanded.includes(item.id!) ? (
+                  <TsEventDetails
+                    tsEventId={item.id}
+                    detailsText={item.details}
+                    handleDetailsChange={handleListItemDetailsChange}
+                  />
+                ) : null}
               </Pressable>
             );
           }}

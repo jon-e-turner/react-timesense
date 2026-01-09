@@ -9,7 +9,6 @@ import TimeSinceDisplay from './time-since-display';
 type TsEventListItemProps = {
   timeSenseEvent: ITimeSenseEvent;
   isSelected: boolean;
-  showDetails: boolean;
 };
 
 function getLatestTrigger(
@@ -37,7 +36,6 @@ function getLatestTrigger(
 export default function TsEventListItem({
   timeSenseEvent,
   isSelected,
-  showDetails,
 }: TsEventListItemProps) {
   return (
     <View id={timeSenseEvent.id.toString()} style={{ flexDirection: 'column' }}>
@@ -52,19 +50,6 @@ export default function TsEventListItem({
           ) : null}
         </View>
       </View>
-      {showDetails ? (
-        <View
-          style={{
-            ...styles.wrapperCustom,
-            ...styles.eliDetails,
-            visibility: showDetails ? 'visible' : 'hidden',
-          }}
-        >
-          <Text style={styles.eliDetailText}>
-            {timeSenseEvent.details ?? 'Romanes eunt domus'}
-          </Text>
-        </View>
-      ) : null}
     </View>
   );
 }
@@ -91,6 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   eliDetailText: {
+    textAlignVertical: 'top',
     color: '#f0f0f0',
   },
 });

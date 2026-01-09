@@ -1,103 +1,108 @@
-import { DEFAULT_EVENT_GLYPH } from '@/types/icons';
-import type { ITimeSenseEvent } from '@/types/time-sense-event';
+import { defaultTheme } from '@/themes/default-theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-export type TsEventDetailsProps = {
-  tsEvent?: ITimeSenseEvent;
-  isVisible: boolean;
-  onClose: (tsEvent?: ITimeSenseEvent) => void;
+type TsEventDetailsProps = {
+  tsEventId: number;
+  detailsText?: string;
+  handleDetailsChange: (text: string, id: number) => void;
 };
 
 export default function TsEventDetails({
-  tsEvent,
-  isVisible,
-  onClose,
+  tsEventId,
+  detailsText,
+  handleDetailsChange,
 }: TsEventDetailsProps) {
   const [isDirty, setIsDirty] = useState(false);
 
-  const handleModalClose = (ignoreChanges: boolean = false) => {
+  const handleDetailsTextChange = (ignoreChanges: boolean = false) => {
     if (isDirty && !ignoreChanges) {
-      onClose(tsEvent);
-    } else {
-      onClose();
     }
-
-    setIsDirty(false);
   };
 
-  const handleEventNameEdit = () => {
-    setIsDirty(true);
+  const handleOnChangeText = (text: string) => {
+    if (text === (detailsText ?? '')) {
+      setIsDirty(false);
+    } else {
+      setIsDirty(true);
+    }
   };
 
   return (
-    <View style={styles.detailsModal}>
-      <View style={styles.headerRow}>
-        <MaterialIcons
-          size={styles.titleText.fontSize}
-          name={tsEvent?.icon ?? DEFAULT_EVENT_GLYPH}
-        />
-        <Text
-          style={styles.titleText}
-          onLongPress={() => handleEventNameEdit()}
-        >
-          {tsEvent?.name}
-        </Text>
-        <Pressable style={styles.doneButton} onPress={() => handleModalClose()}>
-          <MaterialIcons
-            color={styles.doneButton.color}
-            size={styles.titleText.fontSize * 0.85}
-            name="done"
-          />
-        </Pressable>
+    <View
+      style={{
+        ...styles.wrapperCustom,
+        ...styles.eliDetails,
+      }}
+    >
+      <TextInput
+        style={styles.eliDetailText}
+        onSubmitEditing={({ nativeEvent: { text } }) =>
+          handleDetailsChange(text, tsEventId)
+        }
+        onChangeText={(text) => handleOnChangeText(text)}
+        multiline={true}
+        numberOfLines={3}
+        editable={true}
+        autoFocus={true}
+        inputMode="text"
+        value={detailsText ?? undefined}
+        placeholder={'Romanes eunt domus'}
+        placeholderTextColor={'#a0a0a0'}
+        enterKeyHint="done"
+        submitBehavior="newline"
+      />
+      <View style={styles.buttonContainer}>
         <Pressable
-          style={styles.closeButton}
-          onPress={() => handleModalClose(true)}
+          style={styles.submitButton}
+          onPress={() => handleDetailsTextChange()}
         >
-          <MaterialIcons
-            color={styles.closeButton.color}
-            size={styles.titleText.fontSize * 0.85}
-            name={isDirty ? 'delete' : 'close'}
-          />
+          <MaterialIcons style={styles.submitButton} name="done" />
         </Pressable>
+        {isDirty ? (
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => handleDetailsTextChange(true)}
+          >
+            <MaterialIcons style={styles.closeButton} name={'delete'} />
+          </Pressable>
+        ) : null}
       </View>
-      <View style={styles.detailsContent}></View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  detailsModal: {
-    minHeight: '25%',
-    width: '95%',
-    backgroundColor: '#0c2645d7',
-    borderRadius: 18,
-    position: 'absolute',
-    alignSelf: 'center',
-  },
-  detailsContent: {},
-  headerRow: {
-    backgroundColor: '#0072bad7',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 10,
-    paddingInlineEnd: 15,
+  ...defaultTheme,
+  eliDetails: {
+    backgroundColor: '#0c2645',
+    minHeight: 50,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  titleText: {
     flex: 1,
-    fontSize: 32,
-    marginStart: 4,
+  },
+  eliDetailText: {
+    flex: 1,
+    fontSize: 16,
+    textAlignVertical: 'top',
+    backgroundColor: '#0c2645',
+    color: '#f0f0f0',
+  },
+  buttonContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginEnd: 4,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   closeButton: {
     backgroundColor: '#560000c0',
     color: '#f0f0f0c0',
+    fontSize: 24,
   },
-  doneButton: {
+  submitButton: {
     backgroundColor: '#074c07c0',
     color: '#f0f0f0c0',
+    fontSize: 24,
   },
 });
