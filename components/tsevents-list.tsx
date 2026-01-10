@@ -1,3 +1,4 @@
+import alert from '@/components/alert';
 import TsEventDetails from '@/components/tsevent-details';
 import TsEventListItemHeader from '@/components/tsevent-list-item';
 import {
@@ -12,7 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Checkbox } from 'expo-checkbox';
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Pressable, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TsEventsList() {
@@ -88,36 +89,27 @@ export default function TsEventsList() {
     setInDeleteMode(newMode);
   };
 
-  const handleRemoveListItemPress = async (idsToRemove: number[]) => {
-    if (idsToRemove.length > 0) {
-      let deleteRecords = false;
+  const confirmRemoveListItem = () => {
+    alert(
+      `Delete ${deleteSelected.length} records?`,
+      `Removing records is not currently reversible.`,
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+          onPress: () => swapDeleteModeTo(false),
+        },
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: () => handleRemoveListItemPress(),
+        },
+      ]
+    );
+  };
 
-      (() => {
-        Alert.alert(
-          `Delete ${idsToRemove.length} records?`,
-          `Removed the selected records? This is not currently reversible.`,
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-              onPress: () => {
-                deleteRecords = false;
-              },
-            },
-            {
-              text: 'Yes',
-              style: 'destructive',
-              onPress: () => {
-                deleteRecords = true;
-              },
-            },
-          ]
-        );
-      })();
-
-      if (deleteRecords) {
-        // Wire in the DAL here.
-      }
+  const handleRemoveListItemPress = async () => {
+    if (deleteSelected.length > 0) {
     }
 
     swapDeleteModeTo(false);
@@ -183,7 +175,11 @@ export default function TsEventsList() {
         />
         {inDeleteMode ? (
           <Pressable
-            onPress={() => handleRemoveListItemPress(deleteSelected)}
+            onPress={
+              deleteSelected.length > 0
+                ? () => confirmRemoveListItem()
+                : () => swapDeleteModeTo(false)
+            }
             onLongPress={() => swapDeleteModeTo(false)}
           >
             <MaterialIcons
