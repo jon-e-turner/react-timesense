@@ -1,3 +1,5 @@
+import TsEventDetails from '@/components/tsevent-details';
+import TsEventListItemHeader from '@/components/tsevent-list-item';
 import {
   addTsEvent,
   getAllTsEvents,
@@ -7,18 +9,19 @@ import { defaultTheme as styles } from '@/themes/default-theme';
 import { type ITimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Checkbox } from 'expo-checkbox';
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable } from 'react-native';
+import { Alert, FlatList, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import TsEventDetails from './tsevent-details';
-import TsEventListItemHeader from './tsevent-list-item';
 
 export default function TsEventsList() {
   const db = useSQLiteContext();
+  const [detailsExpanded, setDetailsExpanded] = useState<number[]>([]);
+  const [deleteSelected, setDeleteSelected] = useState<number[]>([]);
+  const [inDeleteMode, setInDeleteMode] = useState<boolean>(false);
   const [tsEvents, setTsEvents] = useState<ITimeSenseEvent[]>([]);
   const [selected, setSelected] = useState<number>();
-  const [detailsExpanded, setDetailsExpanded] = useState<number[]>([]);
 
   useEffect(() => {
     async function loadData(db: SQLiteDatabase) {
@@ -80,6 +83,46 @@ export default function TsEventsList() {
     setDetailsExpanded(detailsExpanded.filter((d) => d !== id));
   };
 
+  const swapDeleteModeTo = (newMode: boolean) => {
+    setDeleteSelected([]);
+    setInDeleteMode(newMode);
+  };
+
+  const handleRemoveListItemPress = async (idsToRemove: number[]) => {
+    if (idsToRemove.length > 0) {
+      let deleteRecords = false;
+
+      (() => {
+        Alert.alert(
+          `Delete ${idsToRemove.length} records?`,
+          `Removed the selected records? This is not currently reversible.`,
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+              onPress: () => {
+                deleteRecords = false;
+              },
+            },
+            {
+              text: 'Yes',
+              style: 'destructive',
+              onPress: () => {
+                deleteRecords = true;
+              },
+            },
+          ]
+        );
+      })();
+
+      if (deleteRecords) {
+        // Wire in the DAL here.
+      }
+    }
+
+    swapDeleteModeTo(false);
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -87,45 +130,80 @@ export default function TsEventsList() {
           data={tsEvents}
           renderItem={({ item }) => {
             return (
-              <Pressable
-                key={item.id}
-                onPressOut={() => {
-                  setSelected(item.id);
-                }}
-                onLongPress={() => {
-                  handleListItemLongPress(item.id!);
-                }}
-                style={({ pressed }) => [
-                  {
-                    backgroundColor: pressed
-                      ? styles.container.backgroundColor
-                      : styles.logBox.backgroundColor,
-                  },
-                  styles.wrapperCustom,
-                ]}
-              >
-                <TsEventListItemHeader
-                  timeSenseEvent={item}
-                  isSelected={item.id === selected}
-                />
-                {detailsExpanded.includes(item.id!) ? (
-                  <TsEventDetails
-                    tsEventId={item.id}
-                    detailsText={item.details}
-                    handleDetailsChange={handleListItemPropChange}
-                  />
+              <View style={styles.tsEventsListRow}>
+                {inDeleteMode ? (
+                  <View style={styles.removeItemColumn}>
+                    <Checkbox
+                      color={styles.logBox.backgroundColor}
+                      id={`${item.id}-checkbox`}
+                      value={deleteSelected.includes(item.id)}
+                      onValueChange={(selected) =>
+                        selected
+                          ? setDeleteSelected([...deleteSelected, item.id])
+                          : setDeleteSelected(
+                              deleteSelected.filter((v) => v !== item.id)
+                            )
+                      }
+                    />
+                  </View>
                 ) : null}
-              </Pressable>
+                <Pressable
+                  key={item.id}
+                  onPressOut={() => {
+                    setSelected(item.id);
+                  }}
+                  onLongPress={() => {
+                    handleListItemLongPress(item.id!);
+                  }}
+                  style={({ pressed }) => [
+                    {
+                      flex: 1,
+                      backgroundColor: pressed
+                        ? styles.container.backgroundColor
+                        : styles.logBox.backgroundColor,
+                    },
+                    styles.wrapperCustom,
+                  ]}
+                >
+                  <TsEventListItemHeader
+                    timeSenseEvent={item}
+                    isSelected={item.id === selected}
+                  />
+                  {detailsExpanded.includes(item.id!) ? (
+                    <TsEventDetails
+                      tsEventId={item.id}
+                      detailsText={item.details}
+                      handleDetailsChange={handleListItemPropChange}
+                    />
+                  ) : null}
+                </Pressable>
+              </View>
             );
           }}
         />
-        <Pressable onPress={() => handleAddItemPress()}>
-          <MaterialIcons
-            size={65}
-            name="add-circle-outline"
-            style={[{ marginStart: 'auto' }]}
-          />
-        </Pressable>
+        {inDeleteMode ? (
+          <Pressable
+            onPress={() => handleRemoveListItemPress(deleteSelected)}
+            onLongPress={() => swapDeleteModeTo(false)}
+          >
+            <MaterialIcons
+              size={65}
+              name="remove-circle-outline"
+              style={[{ marginStart: 'auto' }]}
+            />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => handleAddItemPress()}
+            onLongPress={() => swapDeleteModeTo(true)} // TODO: Animate this transition
+          >
+            <MaterialIcons
+              size={65}
+              name="add-circle-outline"
+              style={[{ marginStart: 'auto' }]}
+            />
+          </Pressable>
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -7,6 +7,14 @@ export const defaultTheme = StyleSheet.create({
     backgroundColor: '#004a77',
     padding: 4,
   },
+  tsEventsListRow: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  removeItemColumn: {
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   text: {
     fontSize: 16,
   },
@@ -16,7 +24,6 @@ export const defaultTheme = StyleSheet.create({
     margin: 4,
   },
   loadingScreen: {
-    // alignContent: 'center',
     backgroundColor: '#004a77',
     flex: 1,
     justifyContent: 'center',
