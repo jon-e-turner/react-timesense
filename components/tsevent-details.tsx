@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 type TsEventDetailsProps = {
   tsEventId: number;
   detailsText?: string;
-  handleDetailsChange: (text: string, id: number) => void;
+  handleDetailsChange: (id: number, prop?: string, newValue?: string) => void;
 };
 
 export default function TsEventDetails({
@@ -14,19 +14,26 @@ export default function TsEventDetails({
   detailsText,
   handleDetailsChange,
 }: TsEventDetailsProps) {
-  const [isDirty, setIsDirty] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [text, setText] = useState<string>(detailsText ?? '');
 
   const handleDetailsTextChange = (ignoreChanges: boolean = false) => {
-    if (isDirty && !ignoreChanges) {
+    if (hasChanges && !ignoreChanges) {
+      handleDetailsChange(tsEventId, 'details', text);
+    } else {
+      handleDetailsChange(tsEventId, undefined, undefined);
     }
+    setHasChanges(false);
   };
 
-  const handleOnChangeText = (text: string) => {
-    if (text === (detailsText ?? '')) {
-      setIsDirty(false);
+  const handleOnChangeText = (newText: string) => {
+    if (newText === (detailsText ?? '')) {
+      setHasChanges(false);
     } else {
-      setIsDirty(true);
+      setHasChanges(true);
     }
+
+    setText(newText);
   };
 
   return (
@@ -38,16 +45,13 @@ export default function TsEventDetails({
     >
       <TextInput
         style={styles.eliDetailText}
-        onSubmitEditing={({ nativeEvent: { text } }) =>
-          handleDetailsChange(text, tsEventId)
-        }
         onChangeText={(text) => handleOnChangeText(text)}
         multiline={true}
         numberOfLines={3}
         editable={true}
         autoFocus={true}
         inputMode="text"
-        value={detailsText ?? undefined}
+        value={text}
         placeholder={'Romanes eunt domus'}
         placeholderTextColor={'#a0a0a0'}
         enterKeyHint="done"
@@ -60,14 +64,15 @@ export default function TsEventDetails({
         >
           <MaterialIcons style={styles.submitButton} name="done" />
         </Pressable>
-        {isDirty ? (
-          <Pressable
+        <Pressable
+          style={styles.closeButton}
+          onPress={() => handleDetailsTextChange(true)}
+        >
+          <MaterialIcons
             style={styles.closeButton}
-            onPress={() => handleDetailsTextChange(true)}
-          >
-            <MaterialIcons style={styles.closeButton} name={'delete'} />
-          </Pressable>
-        ) : null}
+            name={hasChanges ? 'delete' : 'close'}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -90,19 +95,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginEnd: 4,
+    justifyContent: 'space-evenly',
     marginTop: 'auto',
     marginBottom: 'auto',
   },
   closeButton: {
-    backgroundColor: '#560000c0',
-    color: '#f0f0f0c0',
+    backgroundColor: '#560000',
+    color: '#f0f0f0',
     fontSize: 24,
+    margin: 2,
   },
   submitButton: {
-    backgroundColor: '#074c07c0',
-    color: '#f0f0f0c0',
+    backgroundColor: '#074c07',
+    color: '#f0f0f0',
     fontSize: 24,
+    margin: 2,
   },
 });

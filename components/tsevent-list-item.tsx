@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import TimeSinceDisplay from './time-since-display';
 
-type TsEventListItemProps = {
+type TsEventListItemHeaderProps = {
   timeSenseEvent: ITimeSenseEvent;
   isSelected: boolean;
 };
@@ -33,10 +33,10 @@ function getLatestTrigger(
   return undefined;
 }
 
-export default function TsEventListItem({
+export default function TsEventListItemHeader({
   timeSenseEvent,
   isSelected,
-}: TsEventListItemProps) {
+}: TsEventListItemHeaderProps) {
   return (
     <View id={timeSenseEvent.id.toString()} style={{ flexDirection: 'column' }}>
       <View aria-selected={isSelected} style={styles.tsEventListItem}>

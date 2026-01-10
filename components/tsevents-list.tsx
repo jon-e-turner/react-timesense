@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import TsEventDetails from './tsevent-details';
-import TsEventListItem from './tsevent-list-item';
+import TsEventListItemHeader from './tsevent-list-item';
 
 export default function TsEventsList() {
   const db = useSQLiteContext();
@@ -46,22 +46,38 @@ export default function TsEventsList() {
     }
   };
 
-  const handleListItemDetailsChange = async (details: string, id: number) => {
-    const existing = tsEvents.find((t) => t.id === id);
-    if (!existing) {
-      throw new Error(`We should never get here, wtf?
+  const handleListItemPropChange = async (
+    id: number,
+    prop?: string,
+    newValue?: string
+  ) => {
+    if (prop !== undefined && newValue !== undefined) {
+      const existing = tsEvents.find((t) => t.id === id);
+      if (!existing) {
+        throw new Error(`We should never get here, wtf?
         \ttsEvents: ${tsEvents}
         \texisting: ${existing}
-        \tdetails: ${details}
+        \tprop: ${prop}
+        \tnewValue: ${newValue}
         \tid: ${id}`);
+      }
+
+      const newTsEvent = await updateTsEvent(db, {
+        ...existing,
+        [prop]: newValue,
+      });
+
+      setTsEvents(
+        tsEvents.map((t) => {
+          if (t.id === id) {
+            return newTsEvent;
+          }
+
+          return t;
+        })
+      );
     }
-
-    const newTsEvent = await updateTsEvent(db, {
-      ...existing,
-      details: details,
-    });
-
-    setTsEvents([...tsEvents, newTsEvent]);
+    setDetailsExpanded(detailsExpanded.filter((d) => d !== id));
   };
 
   return (
@@ -88,7 +104,7 @@ export default function TsEventsList() {
                   styles.wrapperCustom,
                 ]}
               >
-                <TsEventListItem
+                <TsEventListItemHeader
                   timeSenseEvent={item}
                   isSelected={item.id === selected}
                 />
@@ -96,7 +112,7 @@ export default function TsEventsList() {
                   <TsEventDetails
                     tsEventId={item.id}
                     detailsText={item.details}
-                    handleDetailsChange={handleListItemDetailsChange}
+                    handleDetailsChange={handleListItemPropChange}
                   />
                 ) : null}
               </Pressable>

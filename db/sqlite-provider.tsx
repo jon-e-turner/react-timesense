@@ -21,6 +21,7 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   if (currentDbVersion >= DATABASE_VERSION) {
     return;
   }
+
   if (currentDbVersion === 0) {
     // TODO: DO NOT CHECK THIS IN
     // await db.runAsync(`
@@ -49,6 +50,7 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
     `);
     currentDbVersion = 1;
   }
+
   if (currentDbVersion === 1) {
     await seedInitialData(db);
     currentDbVersion = 2;
@@ -70,7 +72,9 @@ async function seedInitialData(db: SQLiteDatabase) {
   }
 
   await db.withTransactionAsync(async () => {
-    await db.execAsync(`
+    await db
+      .execAsync(
+        `
       INSERT INTO timeSenseEvents (icon, name) values ('bookmark', 'first event');
       INSERT INTO timeSenseEvents (icon, name) values ('bookmark-outline', 'second event');
       INSERT INTO timeSenseEvents (icon, name) values ('favorite', 'third event');
@@ -85,14 +89,21 @@ async function seedInitialData(db: SQLiteDatabase) {
       INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (3, json('{"timestamp":"1997-11-06T00:35:00Z","tags":["user"]}'));
       INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, json('{"timestamp":"2025-12-23T00:00:00Z","tags":["user"]}'));
       INSERT INTO eventTriggers (tsEventId, triggerTimestamp) values (4, json('{"timestamp":"2023-05-23T02:30:00Z","tags":["user"]}'));
-    `);
+    `
+      )
+      .then(async () => {
+        console.log(
+          await db.getFirstAsync(
+            `SELECT * FROM timeSenseEvents WHERE rowid == 3;`
+          )
+        );
+        console.log(
+          await db.getFirstAsync(
+            `SELECT * FROM eventTriggers WHERE tsEventId == 5;`
+          )
+        );
+      });
   });
 
-  console.log(
-    await db.getFirstAsync(`SELECT * FROM timeSenseEvents WHERE rowid == 3;`)
-  );
-  console.log(
-    await db.getFirstAsync(`SELECT * FROM eventTriggers WHERE tsEventId == 5;`)
-  );
   return;
 }

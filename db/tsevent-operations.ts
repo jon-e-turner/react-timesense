@@ -104,14 +104,19 @@ export async function getAllTsEvents( // TODO: Paginate this
 
 export async function getTsEventById(
   db: SQLiteDatabase,
-  id: number
+  id: number,
+  userOnly: boolean = false
 ): Promise<ITimeSenseEvent> {
   const res = await db.getFirstAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
       json_group_array(json(et.triggerTimestamp)) as triggerHistory
     FROM timeSenseEvents AS ts
-    LEFT JOIN eventTriggers AS et
-    ON ts.id == et.tsEventId
+    LEFT JOIN (
+      SELECT tsEventId, triggerTimestamp
+      FROM eventTriggers AS et, json_each(et.triggerTimestamp, '$.tags')
+      ${userOnly ? "WHERE json_each.value == 'user'" : ''}
+    ) as et
+    ON ts.rowid == et.tsEventId
     WHERE ts.id == ${id}
     GROUP BY ts.id;
   `);
@@ -134,64 +139,40 @@ export async function getTsEventById(
  *
  * @param db The database context.
  * @param newTsEvent The updated TimeSenseEvent; `newTsEvent.id` must be defined.
- * @returns A Promise that wil resolve to either the updated TimeSenseEvent or null on an error
+ * @returns A Promise that wil resolve to the updated TimeSenseEvent.
  */
 export async function updateTsEvent(
   db: SQLiteDatabase,
-  newTsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'id'>
+  newTsEvent: ITimeSenseEvent
 ): Promise<ITimeSenseEvent> {
-  const dbRecord = await getTsEventById(db, newTsEvent.id);
-  const columns: string[] = [];
-  const values: (keyof ITimeSenseEvent | null)[] = [];
+  let updatedTsEvent: ITimeSenseEvent;
 
-  if (!dbRecord) {
-    throw new Error(
-      `Could not locate database record with id ${newTsEvent.id}`
-    );
-  }
-
-  for (const prop in newTsEvent) {
-    if (prop === 'id' || prop === 'triggerHistory') continue;
-    if (!dbRecord[prop] || dbRecord[prop] !== newTsEvent[prop]) {
-      columns.push(prop);
-      values.push(newTsEvent[prop]);
-    }
-  }
-
-  for (const prop in dbRecord) {
-    if (prop === 'id' || prop === 'triggerHistory') continue;
-    if (!newTsEvent[prop]) {
-      columns.push(prop);
-      values.push(null);
-    }
-  }
-
-  if (columns.length !== values.length) {
-    throw new Error(
-      `The columns and values arrays must be the same length.
-      \tcolumns.length: ${columns.length}
-      \tvalues.length: ${values.length}`
-    );
-  }
-
-  const result = await db
-    .runAsync(
-      `
-    UPDATE OR REPLACE timeSenseEvents
-    SET ($columns) = ($values)
-    WHERE id == $id;
-    `,
-      {
-        $columns: columns.join(', '),
-        $values: values.join(', '),
-        $id: newTsEvent.id,
-      }
-    )
+  return await db
+    .withTransactionAsync(async () => {
+      await db
+        .runAsync(
+          `
+        UPDATE timeSenseEvents SET
+          details = ?,
+          icon = ?,
+          name = ?
+        WHERE id = ?;
+        `,
+          newTsEvent.details ?? null,
+          newTsEvent.icon,
+          newTsEvent.name,
+          newTsEvent.id
+        )
+        .then(async (_) => {
+          updatedTsEvent = await getTsEventById(db, newTsEvent.id, true);
+        });
+    })
+    .then(async () => {
+      return updatedTsEvent;
+    })
     .catch((reason) => {
-      throw new Error(`Insert operation failed with error: ${reason}`);
+      throw new Error(`Update operation failed with error: ${reason}`);
     });
-
-  return await getTsEventById(db, newTsEvent.id); //result.lastInsertRowId);
 }
 
 // DELETE Operations
