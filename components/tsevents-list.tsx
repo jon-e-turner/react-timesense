@@ -3,6 +3,7 @@ import TsEventDetails from '@/components/tsevent-details';
 import TsEventListItemHeader from '@/components/tsevent-list-item';
 import {
   addTsEvent,
+  deleteTsEvents,
   getAllTsEvents,
   updateTsEvent,
 } from '@/db/tsevent-operations';
@@ -102,14 +103,16 @@ export default function TsEventsList() {
         {
           text: 'Yes',
           style: 'destructive',
-          onPress: () => handleRemoveListItemPress(),
+          onPress: () => handleRemoveListItem(),
         },
       ]
     );
   };
 
-  const handleRemoveListItemPress = async () => {
+  const handleRemoveListItem = async () => {
     if (deleteSelected.length > 0) {
+      await deleteTsEvents(db, deleteSelected);
+      setTsEvents(tsEvents.filter((tse) => !deleteSelected.includes(tse.id)));
     }
 
     swapDeleteModeTo(false);

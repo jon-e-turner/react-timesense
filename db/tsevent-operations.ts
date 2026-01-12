@@ -42,7 +42,7 @@ export async function addTsEvent(
     });
   }
 
-  return newTsEvent;
+  return getTsEventById(db, rowId, true);
 }
 
 export async function addEventTriggers({
@@ -82,8 +82,7 @@ export async function getAllTsEvents( // TODO: Paginate this
   db: SQLiteDatabase,
   userOnly: boolean = false
 ): Promise<ITimeSenseEvent[]> {
-  return (
-    await db.getAllAsync<TimeSenseEvent>(`
+  const tsEvents = await db.getAllAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
       json_group_array(json(et.triggerTimestamp)) as triggerHistory
     FROM timeSenseEvents AS ts
@@ -94,8 +93,9 @@ export async function getAllTsEvents( // TODO: Paginate this
     ) as et
     ON ts.rowid == et.tsEventId
     GROUP BY ts.rowid;
-  `)
-  ).map((res) => {
+  `);
+
+  return tsEvents.map((res) => {
     // TODO: Figure out how to not need this step. It makes the db read synchronous.
     res.triggerHistory = JSON.parse(res.triggerHistory as any as string);
     return new TimeSenseEvent(res);
@@ -176,3 +176,15 @@ export async function updateTsEvent(
 }
 
 // DELETE Operations
+
+export async function deleteTsEvents(
+  db: SQLiteDatabase,
+  idsToDelete: number[]
+): Promise<void> {
+  return await db.withTransactionAsync(async () => {
+    for (const id of idsToDelete) {
+      db.runAsync(`DELETE FROM eventTriggers WHERE tsEventId = ${id};`);
+      db.runAsync(`DELETE FROM timeSenseEvents WHERE id = ${id};`);
+    }
+  });
+}

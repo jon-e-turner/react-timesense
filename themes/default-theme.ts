@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export const defaultTheme = StyleSheet.create({
+  button: {},
   container: {
     flex: 1,
     justifyContent: 'center',
