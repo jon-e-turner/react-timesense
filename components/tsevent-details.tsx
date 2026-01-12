@@ -1,103 +1,114 @@
-import { DEFAULT_EVENT_GLYPH } from '@/types/icons';
-import type { ITimeSenseEvent } from '@/types/time-sense-event';
+import { defaultTheme } from '@/themes/default-theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
-export type TsEventDetailsProps = {
-  tsEvent?: ITimeSenseEvent;
-  isVisible: boolean;
-  onClose: (tsEvent?: ITimeSenseEvent) => void;
+type TsEventDetailsProps = {
+  tsEventId: number;
+  detailsText?: string;
+  handleDetailsChange: (id: number, prop?: string, newValue?: string) => void;
 };
 
 export default function TsEventDetails({
-  tsEvent,
-  isVisible,
-  onClose,
+  tsEventId,
+  detailsText,
+  handleDetailsChange,
 }: TsEventDetailsProps) {
-  const [isDirty, setIsDirty] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [text, setText] = useState<string>(detailsText ?? '');
 
-  const handleModalClose = (ignoreChanges: boolean = false) => {
-    if (isDirty && !ignoreChanges) {
-      onClose(tsEvent);
+  const handleDetailsTextChange = (ignoreChanges: boolean = false) => {
+    if (hasChanges && !ignoreChanges) {
+      handleDetailsChange(tsEventId, 'details', text);
     } else {
-      onClose();
+      handleDetailsChange(tsEventId, undefined, undefined);
     }
-
-    setIsDirty(false);
+    setHasChanges(false);
   };
 
-  const handleEventNameEdit = () => {
-    setIsDirty(true);
+  const handleOnChangeText = (newText: string) => {
+    if (newText === (detailsText ?? '')) {
+      setHasChanges(false);
+    } else {
+      setHasChanges(true);
+    }
+
+    setText(newText);
   };
 
   return (
-    <View style={styles.detailsModal}>
-      <View style={styles.headerRow}>
-        <MaterialIcons
-          size={styles.titleText.fontSize}
-          name={tsEvent?.icon ?? DEFAULT_EVENT_GLYPH}
-        />
-        <Text
-          style={styles.titleText}
-          onLongPress={() => handleEventNameEdit()}
+    <View
+      style={{
+        ...styles.wrapperCustom,
+        ...styles.eliDetails,
+      }}
+    >
+      <TextInput
+        style={styles.eliDetailText}
+        onChangeText={(text) => handleOnChangeText(text)}
+        multiline={true}
+        numberOfLines={3}
+        editable={true}
+        autoFocus={true}
+        inputMode="text"
+        value={text}
+        placeholder={'Romanes eunt domus'}
+        placeholderTextColor={'#a0a0a0'}
+        enterKeyHint="done"
+        submitBehavior="newline"
+      />
+      <View style={styles.buttonContainer}>
+        <Pressable
+          style={styles.submitButton}
+          onPress={() => handleDetailsTextChange()}
         >
-          {tsEvent?.name}
-        </Text>
-        <Pressable style={styles.doneButton} onPress={() => handleModalClose()}>
-          <MaterialIcons
-            color={styles.doneButton.color}
-            size={styles.titleText.fontSize * 0.85}
-            name="done"
-          />
+          <MaterialIcons style={styles.submitButton} name="done" />
         </Pressable>
         <Pressable
           style={styles.closeButton}
-          onPress={() => handleModalClose(true)}
+          onPress={() => handleDetailsTextChange(true)}
         >
           <MaterialIcons
-            color={styles.closeButton.color}
-            size={styles.titleText.fontSize * 0.85}
-            name={isDirty ? 'delete' : 'close'}
+            style={styles.closeButton}
+            name={hasChanges ? 'delete' : 'close'}
           />
         </Pressable>
       </View>
-      <View style={styles.detailsContent}></View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  detailsModal: {
-    minHeight: '25%',
-    width: '95%',
-    backgroundColor: '#0c2645d7',
-    borderRadius: 18,
-    position: 'absolute',
-    alignSelf: 'center',
-  },
-  detailsContent: {},
-  headerRow: {
-    backgroundColor: '#0072bad7',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 10,
-    paddingInlineEnd: 15,
+  ...defaultTheme,
+  eliDetails: {
+    backgroundColor: '#0c2645',
+    minHeight: 50,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  titleText: {
     flex: 1,
-    fontSize: 32,
-    marginStart: 4,
+  },
+  eliDetailText: {
+    flex: 1,
+    fontSize: 16,
+    textAlignVertical: 'top',
+    backgroundColor: '#0c2645',
+    color: '#f0f0f0',
+  },
+  buttonContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   closeButton: {
-    backgroundColor: '#560000c0',
-    color: '#f0f0f0c0',
+    backgroundColor: '#560000',
+    color: '#f0f0f0',
+    fontSize: 24,
+    margin: 2,
   },
-  doneButton: {
-    backgroundColor: '#074c07c0',
-    color: '#f0f0f0c0',
+  submitButton: {
+    backgroundColor: '#074c07',
+    color: '#f0f0f0',
+    fontSize: 24,
+    margin: 2,
   },
 });
