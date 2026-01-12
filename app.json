@@ -46,14 +46,9 @@
       [
         "expo-sqlite",
         {
+          "customBuildFlags": ["-DSQLITE_DEFAULT_FOREIGN_KEYS=1"],
           "enableFTS": true
           // "useSqlCipher": true
-        }
-      ],
-      [
-        "expo-asset",
-        {
-          "assets": ["./assets/db/time-sense.db"]
         }
       ]
     ],
