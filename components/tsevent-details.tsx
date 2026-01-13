@@ -15,7 +15,7 @@ export default function TsEventDetails({
   handleDetailsChange,
 }: TsEventDetailsProps) {
   const [hasChanges, setHasChanges] = useState(false);
-  const [text, setText] = useState<string>(detailsText ?? '');
+  const [text, setText] = useState<string | undefined>(detailsText);
 
   const handleDetailsTextChange = (ignoreChanges: boolean = false) => {
     if (hasChanges && !ignoreChanges) {
@@ -44,6 +44,7 @@ export default function TsEventDetails({
       }}
     >
       <TextInput
+        aria-label="detail-text"
         style={styles.eliDetailText}
         onChangeText={(text) => handleOnChangeText(text)}
         multiline={true}
@@ -59,12 +60,14 @@ export default function TsEventDetails({
       />
       <View style={styles.buttonContainer}>
         <Pressable
+          aria-label="done"
           style={styles.submitButton}
           onPress={() => handleDetailsTextChange()}
         >
           <MaterialIcons style={styles.submitButton} name="done" />
         </Pressable>
         <Pressable
+          aria-label={hasChanges ? 'delete' : 'close'}
           style={styles.closeButton}
           onPress={() => handleDetailsTextChange(true)}
         >
