@@ -1,5 +1,6 @@
+import { TimeSenseEvent } from '@/models/time-sense-event';
 import type { HistoryTag } from '@/types/history-tag';
-import { type ITimeSenseEvent, TimeSenseEvent } from '@/types/time-sense-event';
+import { type ITimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
 import type { SQLiteDatabase } from 'expo-sqlite';
 
