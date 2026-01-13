@@ -26,6 +26,9 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# code coverage
+coverage
+
 # macOS
 .DS_Store
 *.pem
@@ -44,6 +47,6 @@ app-example
 /android
 
 # local-only database files
-
+*.db
 *.db-shm
 *.db-wal
