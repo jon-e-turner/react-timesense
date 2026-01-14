@@ -57,11 +57,11 @@ function formatDuration(duration: Duration, refreshInterval: number): string {
   };
 
   const yearsPart =
-    normalizedDuration.years > 0 ? `${normalizedDuration.years}` : '';
+    normalizedDuration.years > 0 ? `${normalizedDuration.years}` : '0';
   const monthsPart =
-    normalizedDuration.months > 0 ? `${normalizedDuration.months}` : '';
+    normalizedDuration.months > 0 ? `${normalizedDuration.months}` : '0';
   const daysPart =
-    normalizedDuration.days > 0 ? `${normalizedDuration.days}` : '';
+    normalizedDuration.days > 0 ? `${normalizedDuration.days}` : '0';
   const hoursPart =
     normalizedDuration.hours > 0
       ? normalizedDuration.hours < 10 &&
@@ -90,7 +90,9 @@ function formatDuration(duration: Duration, refreshInterval: number): string {
       return `${daysPart}D ${hoursPart}:${minutesPart}`;
     case ONE_DAY:
     default:
-      return `${yearsPart}Y ${monthsPart}M ${daysPart}D`;
+      return `${
+        yearsPart === '0' ? '' : yearsPart + 'Y '
+      }${monthsPart}M ${daysPart}D`;
   }
 }
 
