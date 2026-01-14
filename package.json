@@ -15,7 +15,8 @@
     "collectCoverageFrom": [
       "**/*.{ts,tsx}",
       "!**/node_modules/**",
-      "!**/__tests__/**"
+      "!**/__tests__/**",
+      "!**/.expo/**"
     ],
     "preset": "jest-expo",
     "transformIgnorePatterns": [
