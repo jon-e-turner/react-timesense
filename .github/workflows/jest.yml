@@ -22,7 +22,6 @@ jobs:
 
       - name: Run tests
         run: npm test >> $GITHUB_STEP_SUMMARY
-        continue-on-error: true
 
       - name: Upload coverage
         uses: actions/upload-artifact@v6
