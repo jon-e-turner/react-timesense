@@ -22,22 +22,22 @@ describe('<TimeSinceDisplay />', () => {
 
   it('Updates the render of a few hours duration correctly', async () => {
     const { getByText } = render(
-      <TimeSinceDisplay lastTrigger={new UTCDate('2025-01-10T09:40:30Z')} />
+      <TimeSinceDisplay lastTrigger={new UTCDate('2025-01-10T09:40:56Z')} />
     );
 
     await waitFor(() => {
       jest.advanceTimersByTime(3000);
-      getByText('02:19:33');
+      getByText('02:19:04');
     });
   });
 
   it('Renders a few day duration correctly', async () => {
     const { getByText } = render(
-      <TimeSinceDisplay lastTrigger={new UTCDate('2025-01-06T09:40:30Z')} />
+      <TimeSinceDisplay lastTrigger={new UTCDate('2025-01-06T09:50:30Z')} />
     );
 
     await waitFor(() => {
-      getByText('4D 2:19');
+      getByText('4D 2:09');
     });
   });
 
