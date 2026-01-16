@@ -1,13 +1,14 @@
 import LoadingScreen from '@/components/loading-screen';
-import { render, waitFor } from '@testing-library/react-native';
+import { renderAsync } from '@testing-library/react-native';
 
 describe('<LoadingScreen />', () => {
   it('Renders all the elements', async () => {
-    const { getByLabelText, getByText } = render(<LoadingScreen />, {});
+    const { getByLabelText, getByText } = await renderAsync(
+      <LoadingScreen />,
+      {}
+    );
 
-    await waitFor(() => {
-      getByLabelText('loading');
-      getByText('Loading...');
-    });
+    getByLabelText('loading');
+    getByText('Loading...');
   });
 });
