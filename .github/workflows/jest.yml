@@ -21,10 +21,11 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test
-        continue-on-error: true
+        run: npm test >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage
         uses: actions/upload-artifact@v6
         with:
           path: "./coverage/**/*.*"
+          retention-days: 10
+          if-no-files-found: error

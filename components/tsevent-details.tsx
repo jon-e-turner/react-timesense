@@ -21,6 +21,7 @@ export default function TsEventDetails({
     if (hasChanges && !ignoreChanges) {
       handleDetailsChange(tsEventId, 'details', text);
     } else {
+      setText(detailsText ?? '');
       handleDetailsChange(tsEventId, undefined, undefined);
     }
     setHasChanges(false);

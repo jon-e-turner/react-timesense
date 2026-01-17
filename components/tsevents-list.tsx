@@ -120,8 +120,9 @@ export default function TsEventsList() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView aria-label="main screen" style={styles.container}>
         <FlatList
+          aria-label="list of events"
           data={tsEvents}
           renderItem={({ item }) => {
             return (
@@ -129,6 +130,7 @@ export default function TsEventsList() {
                 {inDeleteMode ? (
                   <View style={styles.removeItemColumn}>
                     <Checkbox
+                      testID={`removeListItem${item.id}`}
                       color={styles.logBox.backgroundColor}
                       id={`${item.id}-checkbox`}
                       value={deleteSelected.includes(item.id)}
@@ -143,6 +145,7 @@ export default function TsEventsList() {
                   </View>
                 ) : null}
                 <Pressable
+                  testID={`listItem${item.id}`}
                   key={item.id}
                   onPressOut={() => {
                     setSelected(item.id);
@@ -165,11 +168,13 @@ export default function TsEventsList() {
                     isSelected={item.id === selected}
                   />
                   {detailsExpanded.includes(item.id!) ? (
-                    <TsEventDetails
-                      tsEventId={item.id}
-                      detailsText={item.details}
-                      handleDetailsChange={handleListItemPropChange}
-                    />
+                    <View testID={`listItem${item.id}Details`}>
+                      <TsEventDetails
+                        tsEventId={item.id}
+                        detailsText={item.details}
+                        handleDetailsChange={handleListItemPropChange}
+                      />
+                    </View>
                   ) : null}
                 </Pressable>
               </View>
@@ -178,6 +183,7 @@ export default function TsEventsList() {
         />
         {inDeleteMode ? (
           <Pressable
+            aria-label="remove selected events"
             onPress={
               deleteSelected.length > 0
                 ? () => confirmRemoveListItem()
@@ -193,8 +199,9 @@ export default function TsEventsList() {
           </Pressable>
         ) : (
           <Pressable
+            aria-label="add new event"
             onPress={() => handleAddItemPress()}
-            onLongPress={() => swapDeleteModeTo(true)} // TODO: Animate this transition
+            onLongPress={() => swapDeleteModeTo(true)}
           >
             <MaterialIcons
               size={65}
