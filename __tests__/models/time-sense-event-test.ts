@@ -5,10 +5,10 @@ describe('TimeSenseEvent class', () => {
   test('when given just a name, returns the default object', () => {
     const tsEvent = new TimeSenseEvent({ name: 'test-event' });
 
-    expect(tsEvent.details).not.toBeDefined();
+    expect(tsEvent.details).toBeUndefined();
     expect(tsEvent.icon).toBe(DEFAULT_EVENT_GLYPH);
     expect(tsEvent.triggerHistory).toBeDefined();
-    expect(tsEvent.triggerHistory.length).toBe(0);
+    expect(tsEvent.triggerHistory).toHaveLength(0);
     expect(tsEvent.name).toBe('test-event');
     expect(tsEvent.id).toBe(0);
   });
