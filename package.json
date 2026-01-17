@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@date-fns/utc": "^2.1.1",
+    "@expo/metro-runtime": "^6.1.2",
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.9.1",
     "@react-navigation/elements": "^2.9.4",
