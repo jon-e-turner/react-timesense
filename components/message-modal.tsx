@@ -4,9 +4,9 @@ import { Modal, StyleSheet, Text, View } from 'react-native';
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
-  messageType: 'info' | 'warning' | 'error';
+  messageType?: 'info' | 'warning' | 'error';
   title?: string;
-  onClose: () => void;
+  onRequestClose: () => void;
 }>;
 
 export default function MessageModal({
@@ -14,18 +14,23 @@ export default function MessageModal({
   title,
   messageType = 'info',
   children,
-  onClose,
+  onRequestClose,
 }: Props) {
   return (
     <Modal
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={onRequestClose}
       transparent={true}
       visible={isVisible}
     >
-      <View style={styles.messageModal}>
-        <View style={styles.headerRow}>
-          <MaterialIcons name={messageType} style={iconStyle(messageType)} />
+      <View role="alertdialog" style={styles.messageModal}>
+        <View role="heading" style={styles.headerRow}>
+          <MaterialIcons
+            role="img"
+            aria-label={messageType}
+            name={messageType}
+            style={iconStyle(messageType)}
+          />
           <Text style={styles.titleText}>{title}</Text>
         </View>
         {children}
@@ -35,13 +40,14 @@ export default function MessageModal({
 }
 
 const iconStyle = (messageType: 'info' | 'warning' | 'error') => {
-  const iconColor = {
-    info: '#0072ba',
-    warning: '#ffd33d',
-    error: '#ffd33d',
-  };
-
-  return { fontSize: 28, color: iconColor[messageType] };
+  switch (messageType) {
+    case 'info':
+      return styles.infoIcon;
+    case 'warning':
+      return styles.warningIcon;
+    case 'error':
+      return styles.errorIcon;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -49,11 +55,13 @@ const styles = StyleSheet.create({
     minHeight: '25%',
     width: '85%',
     alignContent: 'center',
-    backgroundColor: '#303030c0',
+    justifyContent: 'center',
+    backgroundColor: '#303030',
   },
   headerRow: {
+    flex: 1,
     height: '16%',
-    backgroundColor: '#004a77c0',
+    backgroundColor: '#004a77',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     paddingHorizontal: 20,

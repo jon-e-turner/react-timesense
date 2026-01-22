@@ -1,4 +1,3 @@
-import alert from '@/components/alert';
 import TsEventDetails from '@/components/tsevent-details';
 import TsEventListItemHeader from '@/components/tsevent-list-item';
 import {
@@ -14,16 +13,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Checkbox } from 'expo-checkbox';
 import { useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, View } from 'react-native';
+import { Button, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import MessageModal from './message-modal';
 
 export default function TsEventsList() {
   const db = useSQLiteContext();
   const [detailsExpanded, setDetailsExpanded] = useState<number[]>([]);
   const [deleteSelected, setDeleteSelected] = useState<number[]>([]);
   const [inDeleteMode, setInDeleteMode] = useState<boolean>(false);
-  const [tsEvents, setTsEvents] = useState<ITimeSenseEvent[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selected, setSelected] = useState<number>();
+  const [tsEvents, setTsEvents] = useState<ITimeSenseEvent[]>([]);
 
   useEffect(() => {
     async function loadData(db: SQLiteDatabase) {
@@ -54,7 +55,7 @@ export default function TsEventsList() {
   const handleListItemPropChange = async (
     id: number,
     prop?: string,
-    newValue?: string
+    newValue?: string,
   ) => {
     if (prop !== undefined && newValue !== undefined) {
       const existing = tsEvents.find((t) => t.id === id);
@@ -79,7 +80,7 @@ export default function TsEventsList() {
           }
 
           return t;
-        })
+        }),
       );
     }
     setDetailsExpanded(detailsExpanded.filter((d) => d !== id));
@@ -88,25 +89,6 @@ export default function TsEventsList() {
   const swapDeleteModeTo = (newMode: boolean) => {
     setDeleteSelected([]);
     setInDeleteMode(newMode);
-  };
-
-  const confirmRemoveListItem = () => {
-    alert(
-      `Delete ${deleteSelected.length} records?`,
-      `Removing records is not currently reversible.`,
-      [
-        {
-          text: 'No',
-          style: 'cancel',
-          onPress: () => swapDeleteModeTo(false),
-        },
-        {
-          text: 'Yes',
-          style: 'destructive',
-          onPress: () => handleRemoveListItem(),
-        },
-      ]
-    );
   };
 
   const handleRemoveListItem = async () => {
@@ -121,6 +103,27 @@ export default function TsEventsList() {
   return (
     <SafeAreaProvider>
       <SafeAreaView aria-label="main screen" style={styles.container}>
+        <MessageModal
+          isVisible={isModalVisible}
+          messageType="warning"
+          title="Delete selected records?"
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <Text style={styles.modalText}>Can you see me?</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Button
+                title="Yes"
+                color="#ff0000"
+                onPress={() => {
+                  handleRemoveListItem();
+                  setIsModalVisible(false);
+                }}
+              />
+              <Button title="No" onPress={() => setIsModalVisible(false)} />
+            </View>
+          </View>
+        </MessageModal>
         <FlatList
           aria-label="list of events"
           data={tsEvents}
@@ -138,7 +141,7 @@ export default function TsEventsList() {
                         selected
                           ? setDeleteSelected([...deleteSelected, item.id])
                           : setDeleteSelected(
-                              deleteSelected.filter((v) => v !== item.id)
+                              deleteSelected.filter((v) => v !== item.id),
                             )
                       }
                     />
@@ -186,7 +189,7 @@ export default function TsEventsList() {
             aria-label="remove selected events"
             onPress={
               deleteSelected.length > 0
-                ? () => confirmRemoveListItem()
+                ? () => setIsModalVisible(true)
                 : () => swapDeleteModeTo(false)
             }
             onLongPress={() => swapDeleteModeTo(false)}

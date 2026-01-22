@@ -5,6 +5,7 @@ export const defaultTheme = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignContent: 'center',
     backgroundColor: '#004a77',
     padding: 4,
   },
@@ -16,8 +17,10 @@ export const defaultTheme = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 16,
+  modalText: {
+    color: '#a0a0a0',
+    fontSize: 18,
+    justifyContent: 'center',
   },
   wrapperCustom: {
     borderRadius: 8,
