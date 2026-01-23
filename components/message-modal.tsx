@@ -1,12 +1,13 @@
+import { defaultTheme as styles } from '@/themes/default-theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PropsWithChildren } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, Text, View } from 'react-native';
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
-  messageType: 'info' | 'warning' | 'error';
+  messageType?: 'info' | 'warning' | 'error';
   title?: string;
-  onClose: () => void;
+  onRequestClose: () => void;
 }>;
 
 export default function MessageModal({
@@ -14,67 +15,38 @@ export default function MessageModal({
   title,
   messageType = 'info',
   children,
-  onClose,
+  onRequestClose,
 }: Props) {
   return (
     <Modal
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={onRequestClose}
       transparent={true}
       visible={isVisible}
     >
-      <View style={styles.messageModal}>
-        <View style={styles.headerRow}>
-          <MaterialIcons name={messageType} style={iconStyle(messageType)} />
-          <Text style={styles.titleText}>{title}</Text>
+      <View role="alertdialog" style={styles.messageModal}>
+        <View role="heading" style={styles.modalHeaderRow}>
+          <MaterialIcons
+            role="img"
+            aria-label={messageType}
+            name={messageType}
+            style={iconStyle(messageType)}
+          />
+          <Text style={styles.modalTitleText}>{title}</Text>
         </View>
-        {children}
+        <View style={styles.modalBodyRow}>{children}</View>
       </View>
     </Modal>
   );
 }
 
 const iconStyle = (messageType: 'info' | 'warning' | 'error') => {
-  const iconColor = {
-    info: '#0072ba',
-    warning: '#ffd33d',
-    error: '#ffd33d',
-  };
-
-  return { fontSize: 28, color: iconColor[messageType] };
+  switch (messageType) {
+    case 'info':
+      return styles.infoIcon;
+    case 'warning':
+      return styles.warningIcon;
+    case 'error':
+      return styles.errorIcon;
+  }
 };
-
-const styles = StyleSheet.create({
-  messageModal: {
-    minHeight: '25%',
-    width: '85%',
-    alignContent: 'center',
-    backgroundColor: '#303030c0',
-  },
-  headerRow: {
-    height: '16%',
-    backgroundColor: '#004a77c0',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  infoIcon: {
-    color: '#0072ba',
-    fontSize: 28,
-  },
-  warningIcon: {
-    color: '#ffd33d',
-    fontSize: 28,
-  },
-  errorIcon: {
-    color: '#ffd33d',
-    fontSize: 28,
-  },
-  titleText: {
-    flexGrow: 1,
-    fontSize: 32,
-  },
-});

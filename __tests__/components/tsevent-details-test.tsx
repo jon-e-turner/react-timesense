@@ -3,6 +3,7 @@ import {
   act,
   fireEventAsync,
   renderAsync,
+  screen,
 } from '@testing-library/react-native';
 
 describe('<TsEventDetails />', () => {
@@ -11,7 +12,7 @@ describe('<TsEventDetails />', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('Renders all the default elements', async () => {
-    const { getByPlaceholderText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -19,14 +20,14 @@ describe('<TsEventDetails />', () => {
       {}
     );
 
-    getByPlaceholderText('Romanes eunt domus');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByPlaceholderText('Romanes eunt domus');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
   });
 
   it('Renders all the elements when provided text', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         detailsText="Romani ite domum"
@@ -35,14 +36,14 @@ describe('<TsEventDetails />', () => {
       {}
     );
 
-    getByDisplayValue('Romani ite domum');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('Romani ite domum');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
   });
 
   it('Updates properly when the text changes', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -52,19 +53,19 @@ describe('<TsEventDetails />', () => {
 
     await act(async () =>
       fireEventAsync.changeText(
-        getByLabelText('detail-text'),
+        screen.getByLabelText('detail-text'),
         'Romani ite domum'
       )
     );
 
-    getByDisplayValue('Romani ite domum');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('delete'); // changed from 'close'
+    screen.getByDisplayValue('Romani ite domum');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('delete'); // changed from 'close'
   });
 
   it('Updates properly when the text changes back to the original', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -74,23 +75,23 @@ describe('<TsEventDetails />', () => {
 
     await act(async () =>
       fireEventAsync.changeText(
-        getByLabelText('detail-text'),
+        screen.getByLabelText('detail-text'),
         'Romani ite domum'
       )
     );
 
     await act(async () =>
-      fireEventAsync.changeText(getByLabelText('detail-text'), '')
+      fireEventAsync.changeText(screen.getByLabelText('detail-text'), '')
     );
 
-    getByDisplayValue('');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
   });
 
   it('Calls the updater function with correct arguments when text has changed and done is pressed', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -100,17 +101,17 @@ describe('<TsEventDetails />', () => {
 
     await act(async () =>
       fireEventAsync.changeText(
-        getByLabelText('detail-text'),
+        screen.getByLabelText('detail-text'),
         'Romani ite domum'
       )
     );
 
-    await act(async () => fireEventAsync.press(getByLabelText('done')));
+    await act(async () => fireEventAsync.press(screen.getByLabelText('done')));
 
-    getByDisplayValue('Romani ite domum');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('Romani ite domum');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
 
     expect(handleDetailsChange).toHaveBeenCalledTimes(1);
     expect(handleDetailsChange).toHaveBeenCalledWith(
@@ -121,7 +122,7 @@ describe('<TsEventDetails />', () => {
   });
 
   it('Calls the updater function with only the id when text has not changed and done is pressed', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -129,19 +130,19 @@ describe('<TsEventDetails />', () => {
       {}
     );
 
-    await act(async () => fireEventAsync.press(getByLabelText('done')));
+    await act(async () => fireEventAsync.press(screen.getByLabelText('done')));
 
-    getByDisplayValue('');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
 
     expect(handleDetailsChange).toHaveBeenCalledTimes(1);
     expect(handleDetailsChange).toHaveBeenCalledWith(1, undefined, undefined);
   });
 
   it('Calls the updater function with only the id when text has not changed and close is pressed', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -149,19 +150,19 @@ describe('<TsEventDetails />', () => {
       {}
     );
 
-    await act(async () => fireEventAsync.press(getByLabelText('close')));
+    await act(async () => fireEventAsync.press(screen.getByLabelText('close')));
 
-    getByDisplayValue('');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
 
     expect(handleDetailsChange).toHaveBeenCalledTimes(1);
     expect(handleDetailsChange).toHaveBeenCalledWith(1, undefined, undefined);
   });
 
   it('Calls the updater function with just the id when text has changed and cancel is pressed', async () => {
-    const { getByDisplayValue, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventDetails
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
@@ -171,16 +172,18 @@ describe('<TsEventDetails />', () => {
 
     await act(async () =>
       fireEventAsync.changeText(
-        getByLabelText('detail-text'),
+        screen.getByLabelText('detail-text'),
         'Romani ite domum'
       )
     );
 
-    await act(async () => fireEventAsync.press(getByLabelText('delete')));
+    await act(async () =>
+      fireEventAsync.press(screen.getByLabelText('delete'))
+    );
 
-    getByDisplayValue('');
-    getByLabelText('detail-text');
-    getByLabelText('done');
-    getByLabelText('close');
+    screen.getByDisplayValue('');
+    screen.getByLabelText('detail-text');
+    screen.getByLabelText('done');
+    screen.getByLabelText('close');
   });
 });

@@ -1,7 +1,7 @@
 import TsEventListItemHeader from '@/components/tsevent-list-item';
 import type { ITimeSenseEvent } from '@/types/time-sense-event';
 import { UTCDate } from '@date-fns/utc';
-import { renderAsync } from '@testing-library/react-native';
+import { renderAsync, screen } from '@testing-library/react-native';
 
 const BASE_TIME = '2026-01-11T12:00:00Z';
 const testTsEvent: ITimeSenseEvent = {
@@ -28,17 +28,17 @@ describe('<TsEventListItemHeader />', () => {
   });
 
   it('Renders all the default elements', async () => {
-    const { getByText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventListItemHeader timeSenseEvent={testTsEvent} isSelected={false} />
     );
 
-    getByText(testTsEvent.name);
-    getByText('1Y 0M 0D');
-    getByLabelText(`${testTsEvent.name}-not-selected`);
+    screen.getByText(testTsEvent.name);
+    screen.getByText('1Y 0M 0D');
+    screen.getByLabelText(`${testTsEvent.name}-not-selected`);
   });
 
   it('Renders correctly with null trigger history', async () => {
-    const { getByText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventListItemHeader
         // The database returns an array with a single `null` element.
         timeSenseEvent={{ ...testTsEvent, triggerHistory: [null!] }}
@@ -46,12 +46,12 @@ describe('<TsEventListItemHeader />', () => {
       />
     );
 
-    getByText(testTsEvent.name);
-    getByLabelText(`${testTsEvent.name}-not-selected`);
+    screen.getByText(testTsEvent.name);
+    screen.getByLabelText(`${testTsEvent.name}-not-selected`);
   });
 
   it('Renders correctly with no trigger history', async () => {
-    const { getByText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventListItemHeader
         // Also test with an empty array in case I fix the issue above.
         timeSenseEvent={{ ...testTsEvent, triggerHistory: [] }}
@@ -59,8 +59,8 @@ describe('<TsEventListItemHeader />', () => {
       />
     );
 
-    getByText(testTsEvent.name);
-    getByLabelText(`${testTsEvent.name}-not-selected`);
+    screen.getByText(testTsEvent.name);
+    screen.getByLabelText(`${testTsEvent.name}-not-selected`);
   });
 
   it('Renders correctly with one trigger history entry', async () => {
@@ -68,7 +68,7 @@ describe('<TsEventListItemHeader />', () => {
       ...testTsEvent,
       triggerHistory: [testTsEvent.triggerHistory[1]],
     };
-    const { getByText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventListItemHeader
         // The database returns an array with a single `null` element.
         timeSenseEvent={oneTrigger}
@@ -76,9 +76,9 @@ describe('<TsEventListItemHeader />', () => {
       />
     );
 
-    getByText(testTsEvent.name);
-    getByText('1Y 0M 2D');
-    getByLabelText(`${testTsEvent.name}-selected`);
+    screen.getByText(testTsEvent.name);
+    screen.getByText('1Y 0M 2D');
+    screen.getByLabelText(`${testTsEvent.name}-selected`);
   });
 
   it('Renders correctly regardless of trigger history entry order', async () => {
@@ -89,7 +89,7 @@ describe('<TsEventListItemHeader />', () => {
         testTsEvent.triggerHistory[0],
       ],
     };
-    const { getByText, getByLabelText } = await renderAsync(
+    await renderAsync(
       <TsEventListItemHeader
         // The database returns an array with a single `null` element.
         timeSenseEvent={oneTrigger}
@@ -97,8 +97,8 @@ describe('<TsEventListItemHeader />', () => {
       />
     );
 
-    getByText(testTsEvent.name);
-    getByText('1Y 0M 0D');
-    getByLabelText(`${testTsEvent.name}-not-selected`);
+    screen.getByText(testTsEvent.name);
+    screen.getByText('1Y 0M 0D');
+    screen.getByLabelText(`${testTsEvent.name}-not-selected`);
   });
 });

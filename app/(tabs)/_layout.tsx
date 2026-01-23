@@ -30,15 +30,6 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="lense"
-        options={{
-          title: 'DevLense',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialIcons name={'alt-route'} color={color} size={24} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="about"
         options={{
           title: 'About',
