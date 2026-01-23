@@ -9,7 +9,9 @@
     "credentialless",
     "Pressable",
     "timesince",
+    "timesense",
     "tsevent",
-    "tsevents"
+    "tsevents",
+    "worklets"
   ]
 }
