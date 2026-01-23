@@ -1,6 +1,7 @@
+import { defaultTheme as styles } from '@/themes/default-theme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PropsWithChildren } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, Text, View } from 'react-native';
 
 type Props = PropsWithChildren<{
   isVisible: boolean;
@@ -24,16 +25,16 @@ export default function MessageModal({
       visible={isVisible}
     >
       <View role="alertdialog" style={styles.messageModal}>
-        <View role="heading" style={styles.headerRow}>
+        <View role="heading" style={styles.modalHeaderRow}>
           <MaterialIcons
             role="img"
             aria-label={messageType}
             name={messageType}
             style={iconStyle(messageType)}
           />
-          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.modalTitleText}>{title}</Text>
         </View>
-        {children}
+        <View style={styles.modalBodyRow}>{children}</View>
       </View>
     </Modal>
   );
@@ -49,40 +50,3 @@ const iconStyle = (messageType: 'info' | 'warning' | 'error') => {
       return styles.errorIcon;
   }
 };
-
-const styles = StyleSheet.create({
-  messageModal: {
-    minHeight: '25%',
-    width: '85%',
-    alignContent: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#303030',
-  },
-  headerRow: {
-    flex: 1,
-    height: '16%',
-    backgroundColor: '#004a77',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  infoIcon: {
-    color: '#0072ba',
-    fontSize: 28,
-  },
-  warningIcon: {
-    color: '#ffd33d',
-    fontSize: 28,
-  },
-  errorIcon: {
-    color: '#ffd33d',
-    fontSize: 28,
-  },
-  titleText: {
-    flexGrow: 1,
-    fontSize: 32,
-  },
-});

@@ -89,6 +89,7 @@ export default function TsEventsList() {
   const swapDeleteModeTo = (newMode: boolean) => {
     setDeleteSelected([]);
     setInDeleteMode(newMode);
+    setIsModalVisible(false);
   };
 
   const handleRemoveListItem = async () => {
@@ -107,21 +108,19 @@ export default function TsEventsList() {
           isVisible={isModalVisible}
           messageType="warning"
           title="Delete selected records?"
-          onRequestClose={() => setIsModalVisible(false)}
+          onRequestClose={() => swapDeleteModeTo(false)}
         >
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <Text style={styles.modalText}>Can you see me?</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Button
-                title="Yes"
-                color="#ff0000"
-                onPress={() => {
-                  handleRemoveListItem();
-                  setIsModalVisible(false);
-                }}
-              />
-              <Button title="No" onPress={() => setIsModalVisible(false)} />
-            </View>
+          <Text style={styles.modalText}>This is a permanent action.</Text>
+          <View style={styles.modalButtonContainer}>
+            <Button
+              title="Yes"
+              color="#ff0000"
+              onPress={() => {
+                handleRemoveListItem();
+                swapDeleteModeTo(false);
+              }}
+            />
+            <Button title="No" onPress={() => swapDeleteModeTo(false)} />
           </View>
         </MessageModal>
         <FlatList
