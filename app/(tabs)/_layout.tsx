@@ -17,7 +17,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name='index'
         options={{
           title: 'TimeSense',
           tabBarIcon: ({ color, focused }) => (
@@ -30,7 +30,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="about"
+        name='about'
         options={{
           title: 'About',
           tabBarIcon: ({ color, focused }) => (

@@ -5,7 +5,7 @@ const { getDefaultConfig } = require('expo/metro-config');
 const config = getDefaultConfig(__dirname);
 
 // Add wasm asset support
-config.resolver.assetExts.push('wasm'); // 
+config.resolver.assetExts.push('wasm'); //
 config.resolver.assetExts.push('db'); // SQLite database files.
 config.resolver.sourceExts.push('sql'); // Raw SQL statements for init and migration.
 

@@ -12,9 +12,9 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title="test modal"
+        title='test modal'
         onRequestClose={onRequestClose}
-      />
+      />,
     );
 
     // TODO: Figure out why this is failing. Roles look right in the DOM.
@@ -29,10 +29,10 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title="test modal"
+        title='test modal'
         onRequestClose={onRequestClose}
-        messageType="warning"
-      />
+        messageType='warning'
+      />,
     );
 
     // screen.getByRole('presentation');
@@ -46,10 +46,10 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title="test modal"
+        title='test modal'
         onRequestClose={onRequestClose}
-        messageType="error"
-      />
+        messageType='error'
+      />,
     );
 
     // screen.getByRole('presentation');

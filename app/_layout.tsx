@@ -14,7 +14,10 @@ export default function RootLayout() {
           useSuspense={true}
         >
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name='(tabs)'
+              options={{ headerShown: false }}
+            />
           </Stack>
         </SQLiteProvider>
       </Suspense>

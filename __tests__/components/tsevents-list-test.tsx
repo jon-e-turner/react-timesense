@@ -15,7 +15,7 @@ jest.mock('expo-asset');
 
 jest.mock(
   'react-native-safe-area-context',
-  () => jest.requireActual('react-native-safe-area-context/jest/mock').default
+  () => jest.requireActual('react-native-safe-area-context/jest/mock').default,
 );
 
 const mockedDatabase = jest.mocked(SQLiteDatabase);
@@ -134,7 +134,7 @@ describe('<TsEventsList />', () => {
     // Exit delete mode
     await fireEventAsync(
       screen.getByLabelText('remove selected events'),
-      'longPress'
+      'longPress',
     );
     expect(() => screen.getByTestId('removeListItem1')).toThrow();
     expect(() => screen.getByTestId('removeListItem2')).toThrow();

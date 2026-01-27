@@ -12,7 +12,7 @@ type TsEventListItemHeaderProps = {
 };
 
 function getLatestTrigger(
-  history: { tags: HistoryTag[]; timestamp: UTCDate }[]
+  history: { tags: HistoryTag[]; timestamp: UTCDate }[],
 ): UTCDate | undefined {
   switch (history.length) {
     case 0:
@@ -21,7 +21,7 @@ function getLatestTrigger(
       return new UTCDate(history[0].timestamp);
     default:
       return new UTCDate(
-        history.reduce((a, b) => (a.timestamp > b.timestamp ? a : b)).timestamp
+        history.reduce((a, b) => (a.timestamp > b.timestamp ? a : b)).timestamp,
       );
   }
 }
@@ -31,14 +31,20 @@ export default function TsEventListItemHeader({
   isSelected,
 }: TsEventListItemHeaderProps) {
   return (
-    <View id={timeSenseEvent.id.toString()} style={{ flexDirection: 'column' }}>
+    <View
+      id={timeSenseEvent.id.toString()}
+      style={{ flexDirection: 'column' }}
+    >
       <View
         aria-label={`${timeSenseEvent.name}-${
           isSelected ? '' : 'not-'
         }selected`}
         style={styles.tsEventListItem}
       >
-        <MaterialIcons style={styles.eliIcon} name={timeSenseEvent.icon} />
+        <MaterialIcons
+          style={styles.eliIcon}
+          name={timeSenseEvent.icon}
+        />
         <Text style={styles.eliTitle}>{timeSenseEvent.name}</Text>
         <View style={{ ...styles.wrapperCustom, justifyContent: 'center' }}>
           {timeSenseEvent.triggerHistory[0] !== null ? (

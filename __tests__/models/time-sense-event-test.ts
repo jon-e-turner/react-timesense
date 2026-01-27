@@ -34,7 +34,7 @@ describe('TimeSenseEvent class', () => {
     expect(tsEvent.triggerHistory).toBeDefined();
     expect(tsEvent.triggerHistory).toHaveLength(1);
     expect(tsEvent.triggerHistory[0].timestamp).toStrictEqual(
-      new UTCDate('2026-01-10T13:00:00Z')
+      new UTCDate('2026-01-10T13:00:00Z'),
     );
     expect(tsEvent.triggerHistory[0].tags).toContain('user');
     expect(tsEvent.name).toBe('test event');
