@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+npx commitlint --config .commitlintrc.ts --edit "$1" ||
+(
+    echo '❌ Commit message format is incorrect. Please follow the conventional commit format.';
+    false;
+)

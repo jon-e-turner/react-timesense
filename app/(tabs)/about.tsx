@@ -8,7 +8,10 @@ export default function AboutScreen() {
   return (
     <View style={styles.aboutScreen}>
       <View style={styles.headerRow}>
-        <MaterialIcons name="bookmark" style={styles.appIcon} />
+        <MaterialIcons
+          name="bookmark"
+          style={styles.appIcon}
+        />
         <Text style={styles.appTitle}>TimeSense</Text>
       </View>
       <View style={styles.hr} />
@@ -34,7 +37,10 @@ export default function AboutScreen() {
       </View>
       <View style={styles.footerRow}>
         <Link href="https://github.com/jon-e-turner/react-timesence">
-          <MaterialCommunityIcons name="github" style={styles.linkIcon} />
+          <MaterialCommunityIcons
+            name="github"
+            style={styles.linkIcon}
+          />
         </Link>
       </View>
     </View>

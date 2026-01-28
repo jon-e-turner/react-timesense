@@ -17,7 +17,7 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     screen.getByPlaceholderText('Romanes eunt domus');
@@ -33,7 +33,7 @@ describe('<TsEventDetails />', () => {
         detailsText="Romani ite domum"
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     screen.getByDisplayValue('Romani ite domum');
@@ -48,14 +48,14 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () =>
       fireEventAsync.changeText(
         screen.getByLabelText('detail-text'),
-        'Romani ite domum'
-      )
+        'Romani ite domum',
+      ),
     );
 
     screen.getByDisplayValue('Romani ite domum');
@@ -70,18 +70,18 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () =>
       fireEventAsync.changeText(
         screen.getByLabelText('detail-text'),
-        'Romani ite domum'
-      )
+        'Romani ite domum',
+      ),
     );
 
     await act(async () =>
-      fireEventAsync.changeText(screen.getByLabelText('detail-text'), '')
+      fireEventAsync.changeText(screen.getByLabelText('detail-text'), ''),
     );
 
     screen.getByDisplayValue('');
@@ -96,14 +96,14 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () =>
       fireEventAsync.changeText(
         screen.getByLabelText('detail-text'),
-        'Romani ite domum'
-      )
+        'Romani ite domum',
+      ),
     );
 
     await act(async () => fireEventAsync.press(screen.getByLabelText('done')));
@@ -117,7 +117,7 @@ describe('<TsEventDetails />', () => {
     expect(handleDetailsChange).toHaveBeenCalledWith(
       1,
       'details',
-      'Romani ite domum'
+      'Romani ite domum',
     );
   });
 
@@ -127,7 +127,7 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () => fireEventAsync.press(screen.getByLabelText('done')));
@@ -147,7 +147,7 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () => fireEventAsync.press(screen.getByLabelText('close')));
@@ -167,18 +167,18 @@ describe('<TsEventDetails />', () => {
         tsEventId={1}
         handleDetailsChange={handleDetailsChange}
       />,
-      {}
+      {},
     );
 
     await act(async () =>
       fireEventAsync.changeText(
         screen.getByLabelText('detail-text'),
-        'Romani ite domum'
-      )
+        'Romani ite domum',
+      ),
     );
 
     await act(async () =>
-      fireEventAsync.press(screen.getByLabelText('delete'))
+      fireEventAsync.press(screen.getByLabelText('delete')),
     );
 
     screen.getByDisplayValue('');

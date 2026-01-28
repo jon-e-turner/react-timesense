@@ -14,7 +14,7 @@ describe('<MessageModal />', () => {
         isVisible={true}
         title="test modal"
         onRequestClose={onRequestClose}
-      />
+      />,
     );
 
     // TODO: Figure out why this is failing. Roles look right in the DOM.
@@ -32,7 +32,7 @@ describe('<MessageModal />', () => {
         title="test modal"
         onRequestClose={onRequestClose}
         messageType="warning"
-      />
+      />,
     );
 
     // screen.getByRole('presentation');
@@ -49,7 +49,7 @@ describe('<MessageModal />', () => {
         title="test modal"
         onRequestClose={onRequestClose}
         messageType="error"
-      />
+      />,
     );
 
     // screen.getByRole('presentation');

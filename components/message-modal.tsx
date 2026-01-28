@@ -24,8 +24,14 @@ export default function MessageModal({
       transparent={true}
       visible={isVisible}
     >
-      <View role="alertdialog" style={styles.messageModal}>
-        <View role="heading" style={styles.modalHeaderRow}>
+      <View
+        role="alertdialog"
+        style={styles.messageModal}
+      >
+        <View
+          role="heading"
+          style={styles.modalHeaderRow}
+        >
           <MaterialIcons
             role="img"
             aria-label={messageType}

@@ -103,7 +103,10 @@ export default function TsEventsList() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView aria-label="main screen" style={styles.container}>
+      <SafeAreaView
+        aria-label="main screen"
+        style={styles.container}
+      >
         <MessageModal
           isVisible={isModalVisible}
           messageType="warning"
@@ -120,7 +123,10 @@ export default function TsEventsList() {
                 swapDeleteModeTo(false);
               }}
             />
-            <Button title="No" onPress={() => swapDeleteModeTo(false)} />
+            <Button
+              title="No"
+              onPress={() => swapDeleteModeTo(false)}
+            />
           </View>
         </MessageModal>
         <FlatList

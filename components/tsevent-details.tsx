@@ -65,7 +65,10 @@ export default function TsEventDetails({
           style={styles.submitButton}
           onPress={() => handleDetailsTextChange()}
         >
-          <MaterialIcons style={styles.submitButton} name="done" />
+          <MaterialIcons
+            style={styles.submitButton}
+            name="done"
+          />
         </Pressable>
         <Pressable
           aria-label={hasChanges ? 'delete' : 'close'}

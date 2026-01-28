@@ -5,19 +5,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     ignore:
-      - dependency-name: "jest" # Cannot upgrade to v30
+      - dependency-name: 'jest' # Cannot upgrade to v30
         versions:
-          - "30.*"
-      - dependency-name: "@types/jest"
+          - '30.*'
+      - dependency-name: '@types/jest'
         versions:
-          - "30.*"
+          - '30.*'
     groups:
       prod:
-        dependency-type: "production"
+        dependency-type: 'production'
       dev:
-        dependency-type: "development"
+        dependency-type: 'development'

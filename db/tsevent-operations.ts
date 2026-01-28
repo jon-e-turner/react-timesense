@@ -7,7 +7,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 // CREATE Operations
 export async function addTsEvent(
   db: SQLiteDatabase,
-  tsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'name'>
+  tsEvent: Partial<ITimeSenseEvent> & Pick<ITimeSenseEvent, 'name'>,
 ): Promise<ITimeSenseEvent> {
   const newTsEvent = new TimeSenseEvent(tsEvent);
 
@@ -21,7 +21,7 @@ export async function addTsEvent(
         $details: newTsEvent.details ?? null,
         $icon: newTsEvent.icon,
         $name: newTsEvent.name,
-      }
+      },
     )
     .catch((reason) => {
       throw new Error(`Insert operation failed with error: ${reason}`);
@@ -29,7 +29,7 @@ export async function addTsEvent(
 
   if (result.changes !== 1) {
     throw new Error(
-      `Insert operation was expected to change 1 row, actually changed ${result.changes}.`
+      `Insert operation was expected to change 1 row, actually changed ${result.changes}.`,
     );
   }
 
@@ -59,7 +59,7 @@ export async function addEventTriggers({
   }[];
 }) {
   const stmt = await db.prepareAsync(
-    'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, json($timestamp));'
+    'INSERT INTO eventTriggers (tsEventId, triggerTimestamp) VALUES ($rowId, json($timestamp));',
   );
 
   try {
@@ -81,7 +81,7 @@ export async function addEventTriggers({
 // READ Operations
 export async function getAllTsEvents( // TODO: Paginate this
   db: SQLiteDatabase,
-  userOnly: boolean = false
+  userOnly: boolean = false,
 ): Promise<ITimeSenseEvent[]> {
   const tsEvents = await db.getAllAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
@@ -106,7 +106,7 @@ export async function getAllTsEvents( // TODO: Paginate this
 export async function getTsEventById(
   db: SQLiteDatabase,
   id: number,
-  userOnly: boolean = false
+  userOnly: boolean = false,
 ): Promise<ITimeSenseEvent> {
   const res = await db.getFirstAsync<TimeSenseEvent>(`
     SELECT ts.id, ts.details, ts.icon, ts.name,
@@ -144,7 +144,7 @@ export async function getTsEventById(
  */
 export async function updateTsEvent(
   db: SQLiteDatabase,
-  newTsEvent: ITimeSenseEvent
+  newTsEvent: ITimeSenseEvent,
 ): Promise<ITimeSenseEvent> {
   let updatedTsEvent: ITimeSenseEvent;
 
@@ -162,7 +162,7 @@ export async function updateTsEvent(
           newTsEvent.details ?? null,
           newTsEvent.icon,
           newTsEvent.name,
-          newTsEvent.id
+          newTsEvent.id,
         )
         .then(async (_) => {
           updatedTsEvent = await getTsEventById(db, newTsEvent.id, true);
@@ -180,7 +180,7 @@ export async function updateTsEvent(
 
 export async function deleteTsEvents(
   db: SQLiteDatabase,
-  idsToDelete: number[]
+  idsToDelete: number[],
 ): Promise<void> {
   return await db.withTransactionAsync(async () => {
     for (const id of idsToDelete) {

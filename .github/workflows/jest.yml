@@ -2,9 +2,9 @@ name: Jest
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
   jest:
@@ -26,6 +26,6 @@ jobs:
       - name: Upload coverage
         uses: actions/upload-artifact@v6
         with:
-          path: "./coverage/**/*.*"
+          path: './coverage/**/*.*'
           retention-days: 10
           if-no-files-found: error

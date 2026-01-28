@@ -29,7 +29,10 @@ describe('<TsEventListItemHeader />', () => {
 
   it('Renders all the default elements', async () => {
     await renderAsync(
-      <TsEventListItemHeader timeSenseEvent={testTsEvent} isSelected={false} />
+      <TsEventListItemHeader
+        timeSenseEvent={testTsEvent}
+        isSelected={false}
+      />,
     );
 
     screen.getByText(testTsEvent.name);
@@ -43,7 +46,7 @@ describe('<TsEventListItemHeader />', () => {
         // The database returns an array with a single `null` element.
         timeSenseEvent={{ ...testTsEvent, triggerHistory: [null!] }}
         isSelected={false}
-      />
+      />,
     );
 
     screen.getByText(testTsEvent.name);
@@ -56,7 +59,7 @@ describe('<TsEventListItemHeader />', () => {
         // Also test with an empty array in case I fix the issue above.
         timeSenseEvent={{ ...testTsEvent, triggerHistory: [] }}
         isSelected={false}
-      />
+      />,
     );
 
     screen.getByText(testTsEvent.name);
@@ -73,7 +76,7 @@ describe('<TsEventListItemHeader />', () => {
         // The database returns an array with a single `null` element.
         timeSenseEvent={oneTrigger}
         isSelected={true}
-      />
+      />,
     );
 
     screen.getByText(testTsEvent.name);
@@ -94,7 +97,7 @@ describe('<TsEventListItemHeader />', () => {
         // The database returns an array with a single `null` element.
         timeSenseEvent={oneTrigger}
         isSelected={false}
-      />
+      />,
     );
 
     screen.getByText(testTsEvent.name);
