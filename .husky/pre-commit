@@ -2,34 +2,34 @@
 echo 'Styling, testing, and building before committing'
 
 # Check staged files
-pnpx lint-staged ||
+npx lint-staged ||
 (
     echo 'Staged files Check Failed. Run npm run format, add changes and try commit again.';
     false;
 )
 
 # Check Prettier standards
-pnpm run format ||
+npm run format ||
 (
     echo 'Prettier Check Failed. Run npm run format, add changes and try commit again.';
     false;
 )
 
 # Check ESLint Standards
-pnpm run lint ||
+npm run lint ||
 (
     echo 'ESLint Check Failed. Make the required changes listed above, add changes and try to commit again.'
     false;
 )
 
 # Check tsconfig standards
-pnpm run type-check ||
+npm run type-check ||
 (
     echo 'Failed Type check.'
     false;
 )
 
-pnpm test || 
+npm test || 
 {
   echo 'Tests failed.'
   false;
