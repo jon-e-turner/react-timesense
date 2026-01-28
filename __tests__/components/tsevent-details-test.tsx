@@ -30,7 +30,7 @@ describe('<TsEventDetails />', () => {
     await renderAsync(
       <TsEventDetails
         tsEventId={1}
-        detailsText='Romani ite domum'
+        detailsText="Romani ite domum"
         handleDetailsChange={handleDetailsChange}
       />,
       {},

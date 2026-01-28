@@ -4,7 +4,7 @@
   "tabWidth": 2,
   "useTabs": false,
   "endOfLine": "lf",
-  "jsxSingleQuote": true,
+  "jsxSingleQuote": false,
   "singleQuote": true,
   "singleAttributePerLine": true
 }
