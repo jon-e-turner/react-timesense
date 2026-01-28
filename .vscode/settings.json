@@ -5,11 +5,12 @@
     "source.sortMembers": "explicit"
   },
   "cSpell.words": [
+    "codegen",
     "COEP",
     "credentialless",
     "Pressable",
-    "timesince",
     "timesense",
+    "timesince",
     "tsevent",
     "tsevents",
     "worklets"

@@ -103,6 +103,9 @@ importers:
       react-native-svg:
         specifier: 15.15.1
         version: 15.15.1(react-native@0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      react-native-timesense:
+        specifier: file:./modules/timesense
+        version: file:modules/timesense
       react-native-uuid:
         specifier: ^2.0.3
         version: 2.0.3
@@ -7152,6 +7155,9 @@ packages:
       react: '*'
       react-native: '*'
 
+  react-native-timesense@file:modules/timesense:
+    resolution: { directory: modules/timesense, type: directory }
+
   react-native-uuid@2.0.3:
     resolution:
       {
@@ -13977,6 +13983,8 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.28.6)(@types/react@19.1.17)(react@19.1.0)
       warn-once: 0.1.1
+
+  react-native-timesense@file:modules/timesense: {}
 
   react-native-uuid@2.0.3: {}
 

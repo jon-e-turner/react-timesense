@@ -1,0 +1,25 @@
+{
+  "name": "react-native-timesense",
+  "version": "0.2.0",
+  "description": "An expandable card component for displaying the amount of time since or until a particular timestamp.",
+  "main": "src/index",
+  "codegenConfig": {
+    "name": "TimesenseViewSpec",
+    "type": "all",
+    "jsSrcsDir": "src"
+  },
+  "author": "Jon Turner",
+  "license": "MIT",
+  "homepage": "https://github.com/jon-e-turner/react-native-timesense#readme",
+  "create-react-native-library": {
+    "type": "fabric-view",
+    "languages": "kotlin-objc",
+    "tools": [
+      "eslint",
+      "jest",
+      "lefthook",
+      "release-it"
+    ],
+    "version": "0.57.0"
+  }
+}
