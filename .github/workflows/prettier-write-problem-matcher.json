@@ -1,0 +1,14 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "prettier-write",
+      "pattern": [
+        {
+          "regexp": "^([._a-zA-z0-9/()-]+)\\s(\\d+\\w+)$",
+          "file": 1,
+          "reviewTime": 2
+        }
+      ]
+    }
+  ]
+}
