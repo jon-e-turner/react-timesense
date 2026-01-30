@@ -13,7 +13,6 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.prettier": "always",
     "source.organizeImports": "explicit",
-    "source.sort.json": "always",
     "source.sortMembers": "explicit"
   }
 }
