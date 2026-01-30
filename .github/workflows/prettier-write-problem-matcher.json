@@ -6,7 +6,8 @@
         {
           "regexp": "^([._a-zA-z0-9/()-]+)\\s(\\d+\\w+)$",
           "file": 1,
-          "reviewTime": 2
+          "reviewTime": 2,
+          "message": "modified by prettier"
         }
       ]
     }
