@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+npm run format || 
+{
+    echo 'Prettier check failed. Make the required changes listed above, add changes and try the commit again.';
+    false;
+}
+
+npm test || 
+{
+  echo 'Tests failed.'
+  false;
+}

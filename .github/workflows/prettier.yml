@@ -1,16 +1,15 @@
-name: 'ESLint'
+name: 'Prettier'
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
-    # The branches below must be a subset of the branches above
+  push:
     branches:
       - main
 
 jobs:
-  eslint:
-    name: Run linter
+  prettier:
+    name: Format code
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,7 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Run ESLint
+      - name: Set up problem matcher
+        run: echo "::add-matcher::.github/workflows/prettier-write-problem-matcher.json"
+
+      - name: Run prettier
         run: |
           npm ci
-          npm run lint
+          npm run format
