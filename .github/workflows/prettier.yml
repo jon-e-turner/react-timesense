@@ -22,4 +22,6 @@ jobs:
         run: echo "::add-matcher::.github/workflows/prettier-write-problem-matcher.json"
 
       - name: Run prettier
-        run: npm run format
+        run: |
+          npm ci
+          npm run format
