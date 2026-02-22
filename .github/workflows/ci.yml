@@ -24,6 +24,7 @@ jobs:
       upload-coverage-artifact: true
 
   dependency-review:
+    if: ${{ github.event_name == 'pull_request'}}
     uses: ./.github/workflows/dependency-review.yml
     with:
       fail-on-severity: moderate
