@@ -1,0 +1,38 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/jest.yml
+    with:
+      upload-coverage-artifact: true
+
+  dependency-review:
+    uses: ./.github/workflows/dependency-review.yml
+    with:
+      fail-on-severity: moderate
+
+  lint:
+    uses: ./.github/workflows/eslint.yml
+
+  format:
+    uses: ./.github/workflows/prettier.yml
+
+  pre-build:
+    uses: ./.github/workflows/expo-prebuild.yml
