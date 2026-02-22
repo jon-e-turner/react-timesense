@@ -20,7 +20,9 @@
       "**/*.{ts,tsx}",
       "!**/node_modules/**",
       "!**/__tests__/**",
-      "!**/.expo/**"
+      "!**/.expo/**",
+      "!.commitlintrc.ts",
+      "!expo-env.d.ts"
     ],
     "preset": "jest-expo",
     "transformIgnorePatterns": [
@@ -36,7 +38,9 @@
   "overrides": {
     "react": "19.1.0",
     "tar": "7.5.9",
-    "minimatch": "10.2.2"
+    "minimatch@3": "legacy-v3",
+    "minimatch@9": "legacy-v9",
+    "minimatch@10": "10.2.2"
   },
   "dependencies": {
     "@date-fns/utc": "^2.1.1",
