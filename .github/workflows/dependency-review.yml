@@ -1,8 +1,13 @@
-name: 'Dependency review'
+name: Dependency review
+
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      fail-on-severity:
+        default: moderate
+        description: 'Minimum severity to block a PR. Possible values are `low`, `moderate`, `high`, `critical`. Defaults to `moderate`.'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -14,8 +19,9 @@ jobs:
     steps:
       - name: 'Checkout Repository'
         uses: actions/checkout@v6
+
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         with:
-          fail-on-severity: 'moderate'
+          fail-on-severity: ${{ inputs.fail-on-severity }}
           comment-summary-in-pr: true

@@ -1,0 +1,37 @@
+name: Expo Pre-build
+
+on:
+  - workflow_call
+
+jobs:
+  prebuild:
+    name: Generate native-code directories
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run `expo prebuild`
+        run: npx expo prebuild
+
+      - name: Upload iOS dir
+        uses: actions/upload-artifact/@v6
+        with:
+          path: ./ios
+          retention-days: 5
+          if-no-files-found: error
+          name: ios
+
+      - name: Upload android dir
+        uses: actions/upload-artifact/@v6
+        with:
+          path: ./android
+          retention-days: 5
+          if-no-files-found: warn
+          name: android
