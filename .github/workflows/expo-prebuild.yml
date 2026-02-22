@@ -33,5 +33,5 @@ jobs:
         with:
           path: ./android
           retention-days: 5
-          if-no-files-found: error
+          if-no-files-found: warn
           name: android
