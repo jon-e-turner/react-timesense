@@ -1,0 +1,14 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "expo-prebuild",
+      "pattern": [
+        {
+          "regexp": "^(.*\\sexited\\swith\\snon-zero\\scode):\\s(\\d+)$",
+          "message": 1,
+          "code": 2
+        }
+      ]
+    }
+  ]
+}

@@ -14,11 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Set up problem matcher
+        run: echo "::add-matcher::./.github/workflows/expo-prebuild-problem-matcher.json"
+
       - name: Install dependencies
         run: npm ci
 
       - name: Run `expo prebuild`
         run: npx expo prebuild
+
+      - name: Remove problem matcher
+        run: echo "::remove-matcher owner=expo-prebuild::"
 
       - name: Upload iOS dir
         uses: actions/upload-artifact/@v6
