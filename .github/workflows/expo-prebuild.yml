@@ -6,7 +6,7 @@ on:
 jobs:
   prebuild:
     name: Generate native-code directories
-    runs-on: ubuntu-latest
+    runs-on: macos-26
     permissions:
       contents: read
       security-events: write
