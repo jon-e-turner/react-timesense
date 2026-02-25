@@ -24,6 +24,7 @@ jobs:
         run: npx expo prebuild
 
       - name: Remove problem matcher
+        if: always()
         run: echo "::remove-matcher owner=expo-prebuild::"
 
       - name: Upload iOS dir

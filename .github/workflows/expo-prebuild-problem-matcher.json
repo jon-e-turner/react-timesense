@@ -6,6 +6,7 @@
         {
           "regexp": "^(.*\\sexited\\swith\\snon-zero\\scode):\\s(\\d+)$",
           "message": 1,
+          "severity": "error",
           "code": 2
         }
       ]
