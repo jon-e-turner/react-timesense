@@ -4,6 +4,10 @@ TimeSense is a project I am using to learn React Native and an attempt at buildi
 
 The end goal is to have both a published application and an npm library that can be included in other React Native applications, which requires proper attention to separation of concerns. For example, as the library must be framework-agnostic, components that will be included **must not** take dependencies on Expo or SQLite.
 
+## Status Badges
+
+[![CI Build](https://github.com/jon-e-turner/react-timesense/actions/workflows/ci.yml/badge.svg)](https://github.com/jon-e-turner/react-timesense/actions/workflows/ci.yml)
+
 ## Tech Stack
 
 - React v19
