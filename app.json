@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "timesense",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.timesense"
@@ -19,15 +18,15 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.timesense"
     },
     "web": {
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
-    "platforms": [/* "android", */ "ios", "web"],
+    "platforms": ["android", "ios"],
     "githubUrl": "https://github.com/jon-e-turner/react-timesense",
     "plugins": [
       "expo-router",
@@ -48,7 +47,6 @@
         {
           "customBuildFlags": ["-DSQLITE_DEFAULT_FOREIGN_KEYS=1"],
           "enableFTS": true
-          // "useSqlCipher": true
         }
       ]
     ],
