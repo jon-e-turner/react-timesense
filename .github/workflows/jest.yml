@@ -1,10 +1,23 @@
 name: Jest
 
 on:
-  push:
-    branches: ['main']
-  pull_request:
-    branches: ['main']
+  workflow_call:
+    inputs:
+      artifact-name:
+        default: coverage
+        description: "String to name the artifact containing coverage results. Defaults to `coverage`."
+        required: false
+        type: string
+      artifact-source-path:
+        default: "./coverage/**/*.*"
+        description: "Path or glob containing the coverage results. Defaults to `./coverage/**/*.*`."
+        required: false
+        type: string
+      upload-coverage-artifact:
+        default: true
+        description: "Boolean controlling the upload of a coverage artifact."
+        type: boolean
+        required: true
 
 jobs:
   jest:
@@ -15,7 +28,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: npm ci
@@ -24,8 +37,11 @@ jobs:
         run: npm test >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage
+        id: upload-coverage
+        if: ${{ inputs.upload-coverage-artifact }}
         uses: actions/upload-artifact@v6
         with:
-          path: './coverage/**/*.*'
-          retention-days: 10
-          if-no-files-found: error
+          path: ${{ inputs.artifact-source-path }}
+          retention-days: 3
+          if-no-files-found: warn
+          name: ${{ inputs.artifact-name }}

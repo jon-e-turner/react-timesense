@@ -104,33 +104,33 @@ export default function TsEventsList() {
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        aria-label='main screen'
+        aria-label="main screen"
         style={styles.container}
       >
         <MessageModal
           isVisible={isModalVisible}
-          messageType='warning'
-          title='Delete selected records?'
+          messageType="warning"
+          title="Delete selected records?"
           onRequestClose={() => swapDeleteModeTo(false)}
         >
           <Text style={styles.modalText}>This is a permanent action.</Text>
           <View style={styles.modalButtonContainer}>
             <Button
-              title='Yes'
-              color='#ff0000'
+              title="Yes"
+              color="#ff0000"
               onPress={() => {
                 handleRemoveListItem();
                 swapDeleteModeTo(false);
               }}
             />
             <Button
-              title='No'
+              title="No"
               onPress={() => swapDeleteModeTo(false)}
             />
           </View>
         </MessageModal>
         <FlatList
-          aria-label='list of events'
+          aria-label="list of events"
           data={tsEvents}
           renderItem={({ item }) => {
             return (
@@ -191,7 +191,7 @@ export default function TsEventsList() {
         />
         {inDeleteMode ? (
           <Pressable
-            aria-label='remove selected events'
+            aria-label="remove selected events"
             onPress={
               deleteSelected.length > 0
                 ? () => setIsModalVisible(true)
@@ -201,19 +201,19 @@ export default function TsEventsList() {
           >
             <MaterialIcons
               size={65}
-              name='remove-circle-outline'
+              name="remove-circle-outline"
               style={[{ marginStart: 'auto' }]}
             />
           </Pressable>
         ) : (
           <Pressable
-            aria-label='add new event'
+            aria-label="add new event"
             onPress={() => handleAddItemPress()}
             onLongPress={() => swapDeleteModeTo(true)}
           >
             <MaterialIcons
               size={65}
-              name='add-circle-outline'
+              name="add-circle-outline"
               style={[{ marginStart: 'auto' }]}
             />
           </Pressable>

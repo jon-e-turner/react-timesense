@@ -1,0 +1,11 @@
+<type>[scope][!]: <description>
+# 50 chars max, lower case, no period.  50 here #
+
+# Leave a blank line
+[body]
+# Use prose or bullet points to describe what changed and why. Wrap lines
+# between 75 and 100 characters
+
+# Leave a blank line
+[footer]
+# For example 'fixes: #23'

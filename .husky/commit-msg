@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
-pnpx commitlint --config .commitlintrc.ts --edit "$1" ||
+npx commitlint --config .commitlintrc.ts --edit "$1" ||
 (
-    echo '❌ Commit message format is incorrect. Please follow the conventional commit format.';
+    echo '❌ Commit message format is incorrect. '
+    echo 'Please run `git config --local commit.template ./.github/.gitmessage`.';
     false;
 )

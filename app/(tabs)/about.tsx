@@ -9,7 +9,7 @@ export default function AboutScreen() {
     <View style={styles.aboutScreen}>
       <View style={styles.headerRow}>
         <MaterialIcons
-          name='bookmark'
+          name="bookmark"
           style={styles.appIcon}
         />
         <Text style={styles.appTitle}>TimeSense</Text>
@@ -28,7 +28,7 @@ export default function AboutScreen() {
           your&nbsp;
           <Link
             style={styles.link}
-            href='https://health.clevelandclinic.org/time-blindness'
+            href="https://health.clevelandclinic.org/time-blindness"
           >
             sense of time
           </Link>{' '}
@@ -36,9 +36,9 @@ export default function AboutScreen() {
         </Text>
       </View>
       <View style={styles.footerRow}>
-        <Link href='https://github.com/jon-e-turner/react-timesence'>
+        <Link href="https://github.com/jon-e-turner/react-timesence">
           <MaterialCommunityIcons
-            name='github'
+            name="github"
             style={styles.linkIcon}
           />
         </Link>

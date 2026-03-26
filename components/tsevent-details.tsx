@@ -45,29 +45,29 @@ export default function TsEventDetails({
       }}
     >
       <TextInput
-        aria-label='detail-text'
+        aria-label="detail-text"
         style={styles.eliDetailText}
         onChangeText={(text) => handleOnChangeText(text)}
         multiline={true}
         numberOfLines={3}
         editable={true}
         autoFocus={true}
-        inputMode='text'
+        inputMode="text"
         value={text}
         placeholder={'Romanes eunt domus'}
         placeholderTextColor={'#a0a0a0'}
-        enterKeyHint='done'
-        submitBehavior='newline'
+        enterKeyHint="done"
+        submitBehavior="newline"
       />
       <View style={styles.buttonContainer}>
         <Pressable
-          aria-label='done'
+          aria-label="done"
           style={styles.submitButton}
           onPress={() => handleDetailsTextChange()}
         >
           <MaterialIcons
             style={styles.submitButton}
-            name='done'
+            name="done"
           />
         </Pressable>
         <Pressable

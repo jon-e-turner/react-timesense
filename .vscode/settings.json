@@ -1,18 +1,20 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
-  },
   "cSpell.words": [
     "codegen",
     "COEP",
     "credentialless",
+    "prebuild",
     "Pressable",
     "timesense",
     "timesince",
     "tsevent",
     "tsevents",
     "worklets"
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.prettier": "always",
+    "source.organizeImports": "explicit",
+    "source.sortMembers": "explicit"
+  }
 }

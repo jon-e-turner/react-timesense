@@ -12,7 +12,7 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title='test modal'
+        title="test modal"
         onRequestClose={onRequestClose}
       />,
     );
@@ -29,9 +29,9 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title='test modal'
+        title="test modal"
         onRequestClose={onRequestClose}
-        messageType='warning'
+        messageType="warning"
       />,
     );
 
@@ -46,9 +46,9 @@ describe('<MessageModal />', () => {
     await renderAsync(
       <MessageModal
         isVisible={true}
-        title='test modal'
+        title="test modal"
         onRequestClose={onRequestClose}
-        messageType='error'
+        messageType="error"
       />,
     );
 
